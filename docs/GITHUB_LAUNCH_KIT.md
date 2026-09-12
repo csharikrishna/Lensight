@@ -40,7 +40,7 @@ Data Quality and Model Quality aren't two separate disciplines. They are two hal
 Today, I’m excited to open-source **Lensight** (v0.2.0 Beta): a unified, lightweight diagnostic and data health toolkit for PyTorch Computer Vision.
 
 🔍 What does Lensight do in a single import?
-• Pre-Training Data Health: Detects train/test leakage, near-duplicates, and cross-label contradictions with 50x faster vectorized NumPy bitwise hashing.
+• Pre-Training Data Health: Detects train/test leakage, near-duplicates, and cross-label contradictions with 12x–16x faster vectorized NumPy bitwise hashing.
 • Smart Survivor Selection: When cleaning duplicate clusters, it uses Laplacian focus variance to automatically keep the sharpest, highest-resolution original rather than deleting arbitrarily.
 • Non-Destructive In-Memory Sanitization: Generates clean `torch.utils.data.Subset` instances without copying gigabytes of files on disk.
 • Explainability (XAI): Native Grad-CAM, Grad-CAM++, HiResCAM, Contrastive CAM ("Why Pullover instead of Coat?"), and Integrated Gradients with vectorized GPU batching.
@@ -83,7 +83,7 @@ Existing tools either require heavy dependencies (OpenCV, Pandas, SciPy, custom 
 We built **Lensight** to unify pre-training data auditing and post-training model diagnostics into a single lightweight toolkit.
 
 ### Key Features & Architectural Highlights:
-1. **Vectorized Perceptual Hashing:** Instead of nested Python loops, Lensight bit-unpacks 64-bit hashes into uint8 arrays and uses a 256-element bitwise XOR popcount lookup table. It computes pairwise Hamming distances across 10,000 images in ~5 seconds (50x faster than legacy tools).
+1. **Vectorized Perceptual Hashing:** Instead of nested Python loops, Lensight bit-unpacks 64-bit hashes into uint8 arrays and uses a 256-element bitwise XOR popcount lookup table. It computes pairwise Hamming distances across 2,500 images in ~0.25 seconds (12x–16x faster than legacy tools).
 2. **Quality-Aware Survivor Selection:** Legacy duplicate removers keep the first alphabetical file path (often deleting a 4K original in favor of a low-res thumbnail). Lensight calculates 2D Laplacian sharpness variance to guarantee the highest-fidelity image is preserved.
 3. **In-Memory Dataset Sanitization:** `DatasetSanitizer.clean_subset` creates a clean `torch.utils.data.Subset` filtering out duplicates and leakage in RAM without duplicating datasets on disk.
 4. **Contrastive CAM:** Answers *"Why class A instead of class B?"* by backpropagating the logit difference $z_A - z_B$.
@@ -144,10 +144,10 @@ calibrated_model = scaler.calibrated_model
 ```
 
 ### Performance details:
-- Perceptual hashing uses vectorized NumPy bitwise XOR popcount tables ($50\times$ speedup over Python loop approaches).
+- Perceptual hashing uses vectorized NumPy bitwise XOR popcount tables ($12\times$ to $16\times$ speedup over Python loop approaches).
 - Built-in interactive REPL cheat sheet: `lensight.help()` or CLI `lensight help`.
 - Wheel package is under 80 KB.
-- All 45 unit tests execute in ~8 seconds.
+- All 45 unit tests execute in ~12–16 seconds.
 
 GitHub: https://github.com/csharikrishna/Lensight  
 PyPI: `pip install lensight`
@@ -185,7 +185,7 @@ Lensight unifies the entire vision QA lifecycle under one cohesive API.
 Pre-Training Data Health 📊:
 • Catches near-duplicates & cross-label contradictions
 • Flags train/test split leakage
-• 50x faster pure NumPy vectorized bitwise hashing
+• 12x–16x faster pure NumPy vectorized bitwise hashing
 • "Smart Survivor Selection" preserves highest-sharpness images instead of deleting alphabetically
 
 ---

@@ -45,7 +45,7 @@ Previously, teams had to stitch together **5 to 6 separate, conflicting librarie
 |---|---|---|
 | **Visual Attribution & CAM** | `pytorch-grad-cam` + `captum` | `GradCAM`, `HiResCAM`, `ContrastiveCAM`, `IntegratedGradients` (CNN & ViT native, vectorized GPU batching) |
 | **Dataset Health & Vision EDA** | Ad-hoc scripts / `pandas-profiling` | `DatasetExplorer` (Laplacian sharpness, exposure clipping, class balance) |
-| **Duplicates & Leakage Auditing** | `imgcheck` / `imgdedup` (disk-only, slow loops) | `DatasetAuditor` ($50\times$ faster vectorized NumPy bitwise hashing, transitive Union-Find) |
+| **Duplicates & Leakage Auditing** | `imgcheck` / `imgdedup` (disk-only, slow loops) | `DatasetAuditor` ($12\times$ to $16\times$ faster vectorized NumPy bitwise hashing, transitive Union-Find) |
 | **Label Noise & Quality Audit** | `cleanlab` (Confident Learning) | Fast complementary triage (`find_label_errors`) via high-confidence prediction discrepancy without out-of-fold retraining overhead |
 | **Confidence Calibration** | `netcal` | `TemperatureScaler` (1-line post-hoc optimization, zero top-1 accuracy change) |
 | **Dataset Sanitization** | Destructive deletion scripts | `DatasetSanitizer` (in-memory `torch.utils.data.Subset` with zero disk mutation) |

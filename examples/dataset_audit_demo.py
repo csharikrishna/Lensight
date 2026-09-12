@@ -2,7 +2,7 @@
 
 Inspired by imgcheck, but significantly elevated:
   - Works on PyTorch DataLoaders & Datasets (not just folders on disk)
-  - Pure NumPy vectorized Hamming distance matrix (50x-100x faster than python loops)
+  - Pure NumPy vectorized Hamming distance matrix (12x-16x faster than python loops)
   - Transitive Union-Find duplicate clustering with smart survivor selection (highest sharpness/quality)
   - Train/Test leakage detection with per-class leakage rates
   - Cross-label contradictory duplicate detection

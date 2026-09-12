@@ -1118,7 +1118,7 @@
     <!-- Stat Highlights -->
     <div class="stat-banner">
       <div class="stat-item">
-        <div class="val">50x</div>
+        <div class="val">15x</div>
         <div class="lbl">Faster Vectorized Hashing</div>
       </div>
       <div class="stat-item">
@@ -1203,7 +1203,7 @@
           <tr>
             <td><strong>Dataset Duplicate Auditing</strong></td>
             <td><code>imgcheck</code> (slow nested loops, arbitrary deletion)</td>
-            <td class="active-col"><span class="chk">✓</span> <code>DatasetAuditor</code> (50x faster NumPy XOR popcount, Smart Survivor)</td>
+            <td class="active-col"><span class="chk">✓</span> <code>DatasetAuditor</code> (15x faster NumPy XOR popcount, Smart Survivor)</td>
           </tr>
           <tr>
             <td><strong>Train/Test Leakage Detection</strong></td>
@@ -1480,7 +1480,7 @@ $ python -c "import lensight; lensight.help()"</code></pre>
       </div>
 
       <div class="faq-item">
-        <h4>How is duplicate clustering 50x faster?</h4>
+        <h4>How is duplicate clustering 15x faster?</h4>
         <p>
           Legacy tools use nested Python loops comparing pairs one-by-one. Lensight bit-unpacks 64-bit perceptual hashes into NumPy arrays and uses a 256-element bitwise XOR popcount lookup table running in C/SIMD vector registers.
         </p>

@@ -41,54 +41,66 @@ def print_system_specs():
     print(f"  PyTorch Version:{torch.__version__}")
     print("=" * 70)
 
-def run_benchmark(dataset_sizes=(1000, 10000, 50000)):
+def run_benchmark(dataset_sizes=(5000, 25000, 100000)):
     print_system_specs()
-    print("\nStarting Dataset Sanitization Memory & Storage Benchmark...\n")
-    print(f"{'Dataset Size':<15} | {'Simulated Raw Size':<20} | {'Legacy Disk Written':<20} | {'Lensight Disk Written':<22}")
-    print("-" * 80)
+    print("\nStarting Dataset Sanitization Memory & Storage Benchmark...")
+    print("Evaluating physical disk replication (legacy) vs. zero-copy in-memory Subset (Lensight)\n")
 
-    # Average compressed image size ~ 50 KB
-    IMG_AVG_BYTES = 50 * 1024
+    profiles = [
+        ("Standard Web / CV Thumbnails (~50 KB/image, e.g., 256x256)", 50 * 1024),
+        ("High-Res Production / Inspection Photos (~850 KB/image, e.g., 1080p DSLR)", 850 * 1024),
+    ]
 
-    for n in dataset_sizes:
-        raw_size_mb = (n * IMG_AVG_BYTES) / (1024 * 1024)
+    for profile_name, img_bytes in profiles:
+        print(f"PROFILE: {profile_name}")
+        print(f"{'Dataset Size':<14} | {'Raw Dataset Size':<18} | {'Legacy Disk Written':<20} | {'Lensight Disk Written':<22}")
+        print("-" * 80)
 
-        # Legacy approach: duplicates ~90% surviving files to a new directory on disk
-        survivors_count = int(n * 0.90)
-        legacy_disk_written_mb = (survivors_count * IMG_AVG_BYTES) / (1024 * 1024)
+        for n in dataset_sizes:
+            raw_size_mb = (n * img_bytes) / (1024 * 1024)
+            survivors_count = int(n * 0.90)
+            legacy_disk_written_mb = (survivors_count * img_bytes) / (1024 * 1024)
 
-        # Lensight approach: in-memory Subset
-        dataset = SyntheticImageDataset(size=n)
-        samples = [
-            SampleMeta(sample_id=i, class_name=f"class_{i%10}", class_idx=i%10)
-            for i in range(n)
-        ]
-        # Simulate 10% duplicate clusters
-        dup_clusters = [
-            DuplicateGroup(cluster_id=f"c_{i}", survivor_id=i, duplicate_ids=[i+1], distances_to_survivor={i+1: 1})
-            for i in range(0, int(n * 0.10) * 2, 2)
-        ]
-        audit_report = AuditReport(
-            total_samples=n,
-            class_counts={f"class_{c}": n // 10 for c in range(10)},
-            imbalance_ratio=1.0,
-            corrupt_files=[],
-            dimension_stats={},
-            duplicate_clusters=dup_clusters,
-            cross_label_conflicts=[],
-            samples=samples,
-        )
+            # Lensight approach: in-memory Subset
+            dataset = SyntheticImageDataset(size=n)
+            samples = [
+                SampleMeta(sample_id=i, class_name=f"class_{i%10}", class_idx=i%10)
+                for i in range(n)
+            ]
+            dup_clusters = [
+                DuplicateGroup(cluster_id=f"c_{i}", survivor_id=i, duplicate_ids=[i+1], distances_to_survivor={i+1: 1})
+                for i in range(0, int(n * 0.10) * 2, 2)
+            ]
+            audit_report = AuditReport(
+                total_samples=n,
+                class_counts={f"class_{c}": n // 10 for c in range(10)},
+                imbalance_ratio=1.0,
+                corrupt_files=[],
+                dimension_stats={},
+                duplicate_clusters=dup_clusters,
+                cross_label_conflicts=[],
+                samples=samples,
+            )
 
-        subset = DatasetSanitizer.clean_subset(dataset, audit_report)
+            subset = DatasetSanitizer.clean_subset(dataset, audit_report)
+            lensight_disk_written_mb = 0.0  # Zero disk I/O
+            mem_overhead_bytes = sys.getsizeof(subset.indices)
 
-        lensight_disk_written_mb = 0.0  # Zero disk I/O
-        mem_overhead_bytes = sys.getsizeof(subset.indices)
+            # Format in MB or GB
+            if raw_size_mb >= 1024:
+                raw_str = f"{raw_size_mb / 1024:.2f} GB"
+                legacy_str = f"{legacy_disk_written_mb / 1024:.2f} GB"
+            else:
+                raw_str = f"{raw_size_mb:.1f} MB"
+                legacy_str = f"{legacy_disk_written_mb:.1f} MB"
 
-        print(f"{n:<15} | {raw_size_mb:>16.1f} MB | {legacy_disk_written_mb:>16.1f} MB | {lensight_disk_written_mb:>18.1f} MB (RAM: {mem_overhead_bytes/1024:.1f} KB)")
+            lensight_str = f"0.0 MB (RAM: {mem_overhead_bytes/1024:.1f} KB)"
+            print(f"{n:<14} | {raw_str:>16} | {legacy_str:>18} | {lensight_str:>22}")
 
-    print("-" * 80)
-    print(" Memory & Storage Benchmark completed successfully.")
-    print(" Key Takeaway: Lensight in-memory Subset requires 0 bytes of disk overhead.")
+        print("-" * 80 + "\n")
+
+    print(" Benchmark completed successfully.")
+    print(" Key Takeaway: Lensight in-memory Subset requires 0 bytes of disk overhead across all resolutions.")
 
 if __name__ == "__main__":
     import argparse

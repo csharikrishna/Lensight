@@ -9,7 +9,7 @@ Every script runs in seconds on commodity developer hardware (CPU or GPU) withou
 ## 📋 Benchmark Scripts
 
 ### 1. Vectorized Deduplication Speedup (`bench_dedup_speedup.py`)
-Reproduces the **41x to 54x speedup** achieved by Lensight's bitwise XOR popcount lookup table (`_compute_pairwise_hamming`) compared to legacy nested Python loops (`imgcheck`, `imagehash`).
+Reproduces the **12x to 16x speedup** achieved by Lensight's bitwise XOR popcount lookup table (`pairwise_hamming_matrix`) compared to legacy nested Python loops (`imgcheck`, `imagehash`).
 
 **To run:**
 ```bash
@@ -24,7 +24,7 @@ python benchmarks/bench_dedup_speedup.py --sizes 500 1500 2500
 ---
 
 ### 2. Vectorized Batch CAM Throughput (`bench_cam_throughput.py`)
-Measures visual attribution throughput (images/sec) comparing single-image sequential loops against Lensight's batched backpropagation (`explain_batch`). Demonstrates **~6x to 7x throughput gains** on CNN architectures.
+Measures visual attribution throughput (images/sec) comparing single-image sequential loops against Lensight's batched backpropagation (`explain_batch`). Demonstrates **5.5x to 7.5x throughput gains** on CNN architectures.
 
 **To run:**
 ```bash

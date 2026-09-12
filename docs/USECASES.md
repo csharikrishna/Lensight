@@ -323,7 +323,7 @@ Real-world datasets suffer from silent dataset contamination bugs that severely 
 
 ### Toolkit Solution
 `lensight.eda.DatasetAuditor` and `DatasetSanitizer` provide a complete auditing and remediation workflow:
-* **Vectorized Perceptual Hashing**: Fast pure NumPy 64-bit perceptual hashing (`dhash`, `ahash`, `phash`) with vectorized pairwise XOR matrix calculations ($50\times$ faster than nested python loops).
+* **Vectorized Perceptual Hashing**: Fast pure NumPy 64-bit perceptual hashing (`dhash`, `ahash`, `phash`) with vectorized pairwise XOR matrix calculations ($12\times$ to $16\times$ faster than nested python loops).
 * **Transitive Union-Find Clustering with Smart Survivor Selection**: Collapses chains of near-duplicates into clean clusters, automatically keeping the sample with the **highest Laplacian sharpness score** and resolution.
 * **Train/Test Split Leakage Detection**: Cross-references validation/test images against training sets and provides per-class leakage percentages.
 * **In-Memory PyTorch Sanitization**: `DatasetSanitizer.clean_subset` produces a clean `torch.utils.data.Subset` with zero disk modification.
