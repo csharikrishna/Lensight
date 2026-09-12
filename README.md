@@ -6,7 +6,7 @@
 
 **A unified, lightweight PyTorch computer-vision diagnostic, interpretability, and dataset health toolkit.**
 
-[![PyPI: Pending Release](https://img.shields.io/badge/pypi-v0.2.0%20(pending%20release)-orange.svg)](https://github.com/csharikrishna/Lensight/releases)
+[![PyPI: Pending Release](https://img.shields.io/badge/pypi-v0.1.0%20(pending%20release)-orange.svg)](https://github.com/csharikrishna/Lensight/releases)
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![CI](https://github.com/csharikrishna/Lensight/actions/workflows/ci.yml/badge.svg)](https://github.com/csharikrishna/Lensight/actions/workflows/ci.yml)
@@ -26,7 +26,7 @@
 
 </div>
 
-> **🌱 Project Status: v0.2.0 (Beta)** — Lensight is an open-source CV toolkit in active early release. It is fully tested with clean-room installs and zero-bloat dependencies. We are actively collecting real-world feedback from computer-vision researchers and practitioners. Issue reports and PRs are warmly welcomed!
+> **🌱 Project Status: v0.1.0 (Beta)** — Lensight is an open-source CV toolkit in active early release. It is fully tested with clean-room installs and zero-bloat dependencies. We are actively collecting real-world feedback from computer-vision researchers and practitioners. Issue reports and PRs are warmly welcomed!
 
 ---
 
@@ -75,7 +75,7 @@ graph LR
 
 ## ⚡ Installation
 
-Install directly from GitHub (v0.2.0):
+Install directly from GitHub (v0.1.0):
 ```bash
 pip install git+https://github.com/csharikrishna/Lensight.git
 ```

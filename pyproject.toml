@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lensight"
-version = "0.2.0"
+version = "0.1.0"
 description = "The unified PyTorch computer-vision diagnostic, interpretability, and dataset health toolkit."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "Lensight Contributors", email = "maintainers@lensight.dev" }]
+authors = [{ name = "Hari Krishna", email = "csharikrishna1806@gmail.com" }]
 keywords = [
     "deep-learning",
     "computer-vision",

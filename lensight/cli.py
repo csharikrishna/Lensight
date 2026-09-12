@@ -79,9 +79,10 @@ def main(args=None):
 
     elif parsed.command == "info":
         import torch
+        from . import __version__
         print("Lensight Environment Status:")
         print(f"  * Python:       {sys.version.split()[0]}")
-        print(f"  * Lensight:     0.2.0")
+        print(f"  * Lensight:     {__version__}")
         print(f"  * PyTorch:      {torch.__version__}")
         print(f"  * CUDA device:  {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU (No CUDA detected)'}")
         return

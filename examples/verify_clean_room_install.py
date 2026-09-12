@@ -13,7 +13,7 @@ from pathlib import Path
 
 def test_clean_install():
     repo_root = Path(__file__).resolve().parent.parent
-    wheel_files = list((repo_root / "dist").glob("lensight-0.2.0-py3-none-any.whl"))
+    wheel_files = list((repo_root / "dist").glob("lensight-*.whl"))
     assert wheel_files, "Wheel file not found in dist/"
     wheel_path = wheel_files[0]
     print(f"Testing wheel: {wheel_path}")

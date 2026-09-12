@@ -37,7 +37,7 @@ If you train Computer Vision models in PyTorch, your debugging workflow probably
 
 Data Quality and Model Quality aren't two separate disciplines. They are two halves of the exact same debugging loop.
 
-Today, I’m excited to open-source **Lensight** (v0.2.0 Beta): a unified, lightweight diagnostic and data health toolkit for PyTorch Computer Vision.
+Today, I’m excited to open-source **Lensight** (v0.1.0 Beta): a unified, lightweight diagnostic and data health toolkit for PyTorch Computer Vision.
 
 🔍 What does Lensight do in a single import?
 • Pre-Training Data Health: Detects train/test leakage, near-duplicates, and cross-label contradictions with 12x–16x faster vectorized NumPy bitwise hashing.
@@ -51,7 +51,7 @@ Today, I’m excited to open-source **Lensight** (v0.2.0 Beta): a unified, light
 No OpenCV. No Pandas. No heavy C++ compilers. Just PyTorch, NumPy, Pillow, and Scikit-Learn.
 The entire wheel is under 80 KB and runs all 45 unit tests in ~8 seconds.
 
-🌱 Project Status: Early open-source beta (v0.2.0). I built this to solve the fragmented CV debugging workflow and would love early feedback, real-world bug reports, and ideas from the community!
+🌱 Project Status: Early open-source beta (v0.1.0). I built this to solve the fragmented CV debugging workflow and would love early feedback, real-world bug reports, and ideas from the community!
 
 Check it out on GitHub:
 👉 https://github.com/csharikrishna/Lensight
@@ -161,7 +161,7 @@ Would love to hear your thoughts, feedback, and feature requests!
 
 ```text
 🧵 1/6
-Excited to open-source Lensight (v0.2.0 Beta): a unified, lightweight PyTorch diagnostic & dataset health toolkit. 🔍⚡
+Excited to open-source Lensight (v0.1.0 Beta): a unified, lightweight PyTorch diagnostic & dataset health toolkit. 🔍⚡
 
 No more installing 5 fragmented packages just to debug one computer vision model.
 
