@@ -54,9 +54,9 @@ dev = ["pytest>=7.0", "torchvision>=0.14"]
 lensight = "lensight.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/yourname/lensight"
-Documentation = "https://github.com/yourname/lensight#readme"
-Issues = "https://github.com/yourname/lensight/issues"
+Homepage = "https://github.com/csharikrishna/Lensight-"
+Documentation = "https://csharikrishna.github.io/Lensight-/"
+Issues = "https://github.com/csharikrishna/Lensight-/issues"
 
 [tool.setuptools.packages.find]
 include = ["lensight*"]

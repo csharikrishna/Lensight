@@ -12,7 +12,7 @@ The unified, zero-bloat PyTorch computer vision diagnostic toolkit: pre-training
 ```
 
 ### Repository Website / Documentation URL
-`https://github.com/yourname/lensight#readme`
+`https://csharikrishna.github.io/Lensight-/`
 
 ### GitHub Topics / Tags
 Add these tags to the repository:
@@ -52,7 +52,7 @@ No OpenCV. No Pandas. No heavy C++ compilers. Just PyTorch, NumPy, Pillow, and S
 The entire wheel is under 80 KB and runs all 45 unit tests in ~8 seconds.
 
 Check it out on GitHub and let me know your thoughts:
-👉 https://github.com/yourname/lensight
+👉 https://github.com/csharikrishna/Lensight-
 
 #MachineLearning #ComputerVision #PyTorch #DeepLearning #DataScience #OpenSource #AI #MLOps
 ```
@@ -64,7 +64,7 @@ Check it out on GitHub and let me know your thoughts:
 **Title:** `[P] Lensight: A unified, dependency-light toolkit for PyTorch CV data auditing, confidence calibration, error clustering, and Grad-CAM`
 
 ```markdown
-**GitHub:** https://github.com/yourname/lensight  
+**GitHub:** https://github.com/csharikrishna/Lensight-  
 **License:** MIT  
 **Dependencies:** PyTorch, NumPy, Pillow, Scikit-Learn (No OpenCV, No Pandas, No SciPy)
 
@@ -92,7 +92,7 @@ We ran a full 10-epoch validation test on Fashion-MNIST with ResNet-18 on GPU: d
 
 Code and benchmarks are open-source on GitHub. Feedback and contributions are welcome!
 
-Link: https://github.com/yourname/lensight
+Link: https://github.com/csharikrishna/Lensight-
 ```
 
 ---
@@ -147,7 +147,7 @@ calibrated_model = scaler.calibrated_model
 - Wheel package is under 80 KB.
 - All 45 unit tests execute in ~8 seconds.
 
-GitHub: https://github.com/yourname/lensight  
+GitHub: https://github.com/csharikrishna/Lensight-  
 PyPI: `pip install lensight`
 
 Would love to hear your thoughts, feedback, and feature requests!
@@ -163,7 +163,7 @@ Excited to announce Lensight: a unified, production-grade PyTorch diagnostic & d
 
 No more installing 5 fragmented packages just to debug one computer vision model.
 
-GitHub: https://github.com/yourname/lensight
+GitHub: https://github.com/csharikrishna/Lensight-
 #PyTorch #ComputerVision #DeepLearning
 
 ---
@@ -215,5 +215,5 @@ Zero dependency bloat:
 
 Wheel size < 80 KB. 45 tests pass in 8s.
 Check out the repo, star ⭐, and let us know what you think:
-👉 https://github.com/yourname/lensight
+👉 https://github.com/csharikrishna/Lensight-
 ```
