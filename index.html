@@ -1362,7 +1362,7 @@ raw_ece = ece_metric.<span class="fn">compute</span>(val_probs, val_labels)
 scaler = <span class="fn">TemperatureScaler</span>(model)
 summary = scaler.<span class="fn">fit</span>(val_loader)
 <span class="fn">print</span>(summary.<span class="fn">summary_text</span>())
-<span class="com"># ECE: 10.15% -> 5.89% (-42.0% error reduction)</span>
+<span class="com"># e.g. ECE: 7.50% -> 5.01% (T=1.44 post-hoc calibration)</span>
 
 <span class="com"># 3. Deploy calibrated drop-in nn.Module</span>
 calibrated_model = scaler.calibrated_model
@@ -1399,7 +1399,7 @@ dirty_labels = report.misclassification.<span class="fn">find_label_errors</span
 $ lensight audit --dataset data/train_images --report reports/audit.html
 
 <span class="com"># 2. Detect train/test data leakage between split folders:</span>
-$ lensight leakage --train data/train --test data/val --report reports/leakage.html
+$ lensight leakage --train data/train --test data/val --json reports/leakage.json
 
 <span class="com"># 3. Safely export a cleaned dataset without duplicates:</span>
 $ lensight clean --dataset data/raw --output data/cleaned --threshold 0
@@ -1424,7 +1424,7 @@ $ python -c "import lensight; lensight.help()"</code></pre>
         <span class="case-tag">Medical Imaging</span>
         <h4>Patient Cohort Leakage</h4>
         <p>
-          Detect identical chest X-ray scans appearing in both train and validation splits due to anonymized re-scans, preventing artificially inflated clinical scores.
+          Detect identical chest X-ray scans appearing across both train and validation splits due to anonymized re-scans, preventing artificially inflated clinical scores.
         </p>
       </div>
 
@@ -1432,7 +1432,7 @@ $ python -c "import lensight; lensight.help()"</code></pre>
         <span class="case-tag">E-Commerce</span>
         <h4>Garment Subcategory Ambiguity</h4>
         <p>
-          Identified 42 contaminated product tags in Fashion-MNIST where Pullover and Coat were mislabeled by annotators, improving downstream retrieval accuracy.
+          Surfaces ambiguous and mislabeled sample candidates between visually adjacent classes (such as Pullover vs Coat or Sandal vs Sneaker) using high-confidence discrepancy audits.
         </p>
       </div>
 
@@ -1440,7 +1440,7 @@ $ python -c "import lensight; lensight.help()"</code></pre>
         <span class="case-tag">Autonomous Driving</span>
         <h4>Spurious Background Artifacts</h4>
         <p>
-          HiResCAM revealed that false positive pedestrian detections were triggered by road paint textures rather than actual human silhouettes, guiding targeted augmentation.
+          High-resolution visual attribution with HiResCAM isolates fine-grained features to reveal whether false positive detections stem from real silhouettes or spurious background textures.
         </p>
       </div>
     </div>
@@ -1476,7 +1476,7 @@ $ python -c "import lensight; lensight.help()"</code></pre>
       <div class="faq-item">
         <h4>Does it support Vision Transformers (ViT)?</h4>
         <p>
-          Yes. Lensight includes <code>create_vit_reshape_transform()</code>, which reshapes 1D patch tokens into 2D spatial feature maps, enabling Grad-CAM, HiResCAM, and Score-CAM on ViT, DeiT, and DINO models seamlessly.
+          Yes. Lensight includes <code>create_vit_reshape_transform()</code>, which reshapes 1D patch tokens into 2D spatial feature maps, enabling Grad-CAM, HiResCAM, Grad-CAM++, and EigenCAM on ViT, DeiT, and DINO models seamlessly.
         </p>
       </div>
     </div>

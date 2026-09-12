@@ -308,7 +308,7 @@ print("[OK] Model passed all production criteria.")
 ```bash
 pytest
 ```
-The test suite contains **44 comprehensive unit tests** covering explainers, failure clustering, temperature scaling, perceptual hashing, leakage detection, and dataset sanitization. The entire suite runs in **~6 to 8 seconds** with zero external network access and zero GPU requirements.
+The test suite contains **45 comprehensive unit tests** covering explainers, failure clustering, temperature scaling, perceptual hashing, leakage detection, and dataset sanitization. The entire suite runs in **~6 to 8 seconds** with zero external network access and zero GPU requirements.
 
 ---
 
