@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Model Diagnosis Report</title>
+<style>
+  :root {
+    --bg-page: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --primary: #2563eb;
+    --primary-light: #eff6ff;
+    --border: #e2e8f0;
+    --danger: #ef4444;
+    --danger-bg: #fef2f2;
+    --success: #10b981;
+    --warning: #f59e0b;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 0; background: var(--bg-page); color: var(--text-main); line-height: 1.5; }
+  header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 40px 48px; border-bottom: 1px solid #334155; }
+  .header-content { max-width: 1040px; margin: 0 auto; }
+  .header-badge { display: inline-block; font-size: 11px; letter-spacing: 0.1em; font-weight: 700; color: #60a5fa; background: rgba(96,165,250,0.15); padding: 4px 8px; border-radius: 4px; margin-bottom: 8px; }
+  header h1 { margin: 0; font-size: 28px; font-weight: 700; }
+  .timestamp { color: #94a3b8; margin: 8px 0 0; font-size: 13px; }
+  section { max-width: 1040px; margin: 28px auto; background: var(--card-bg); padding: 28px 36px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+  .alert-section { background: var(--danger-bg); border: 1px solid #fca5a5; }
+  .alert-header { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
+  .alert-icon { font-size: 28px; color: var(--danger); line-height: 1; }
+  .alert-header h2 { margin: 0 0 4px; font-size: 18px; color: #991b1b; }
+  .alert-header p { margin: 0; font-size: 13.5px; color: #7f1d1d; }
+  h2 { margin-top: 0; font-size: 20px; font-weight: 700; color: #0f172a; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  h3 { font-size: 15px; color: #334155; margin: 0 0 10px; }
+  h3 small { font-weight: 400; color: var(--text-muted); font-size: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  th { color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; background: #f8fafc; }
+  .interactive-table tr.filter-row:hover, .interactive-table tbody tr:hover { background: var(--primary-light); cursor: pointer; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+  .badge-true { background: #e0e7ff; color: #3730a3; }
+  .badge-pred { background: #fee2e2; color: #991b1b; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: #f8fafc; border: 1px solid var(--border); padding: 16px 20px; border-radius: 8px; }
+  .stat-value { display: block; font-size: 30px; font-weight: 800; color: var(--primary); }
+  .stat-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; }
+  .split-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .chart-container { background: #f8fafc; border: 1px solid var(--border); padding: 16px; border-radius: 8px; }
+  .remediation-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px 18px; margin: 16px 0; color: #166534; font-size: 14px; }
+  .remediation-tag { font-size: 11px; font-weight: 800; color: #15803d; letter-spacing: 0.08em; display: block; margin-bottom: 4px; }
+  .remediation-box strong { color: #14532d; }
+  .summary-note { color: var(--text-muted); font-size: 14px; margin-bottom: 12px; }
+  .gallery-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .gallery-header h2 { border: none; padding: 0; margin: 0; }
+  #gallery-search { padding: 8px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; width: 260px; }
+  #gallery-search:focus { outline: none; border-color: var(--primary); }
+  .filter-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .chip { background: #f1f5f9; border: 1px solid var(--border); padding: 6px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 600; color: #334155; cursor: pointer; transition: all 0.15s ease; }
+  .chip:hover { background: #e2e8f0; }
+  .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .chip-alert { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+  .chip-alert.active { background: var(--danger); color: white; border-color: var(--danger); }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+  .gallery-card { margin: 0; background: #ffffff; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .gallery-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+  .card-img-wrapper { width: 100%; aspect-ratio: 1; overflow: hidden; background: #000; }
+  .gallery-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  figcaption { font-size: 12px; color: #334155; padding: 10px 12px; font-weight: 500; border-top: 1px solid var(--border); }
+  @media (max-width: 768px) {
+    .split-tables { grid-template-columns: 1fr; }
+    section { padding: 20px; }
+    header { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+        <header>
+          <div class="header-content">
+            <div class="header-badge">LENSIGHT DIAGNOSTIC DASHBOARD</div>
+            <h1>Model Diagnosis Report</h1>
+            <p class="timestamp">Generated on 2026-09-09 11:32 &bull; Self-contained report</p>
+          </div>
+        </header>
+        
+        <section>
+          <h2>Accuracy &amp; Failure Modes</h2>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <span class="stat-value">100.0%</span>
+              <span class="stat-label">Accuracy</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">0</span>
+              <span class="stat-label">Errors / 120</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">0</span>
+              <span class="stat-label">Failure Clusters</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">0</span>
+              <span class="stat-label">Suspected Annotation Errors</span>
+            </div>
+          </div>
+
+          <div class="split-tables">
+            <div>
+              <h3>Most Confused Class Pairs <small>(click to filter)</small></h3>
+              <table class="interactive-table">
+                <thead><tr><th>True Class</th><th>Predicted</th><th>Error Count</th></tr></thead>
+                <tbody><tr><td colspan="3">No errors found</td></tr></tbody>
+              </table>
+            </div>
+            <div>
+              <h3>Failure Clusters <small>(click to filter)</small></h3>
+              <table class="interactive-table">
+                <thead><tr><th>Cluster</th><th>Size</th><th>Dominant Pattern</th><th>Avg Conf</th></tr></thead>
+                <tbody><tr><td colspan="4">Not enough errors to cluster</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        
+        <section>
+          <h2>Confidence Calibration</h2>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <span class="stat-value">0.0051</span>
+              <span class="stat-label">Expected Calibration Error (ECE)</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">0.0902</span>
+              <span class="stat-label">Max Calibration Error (MCE)</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">99.5%</span>
+              <span class="stat-label">Mean Model Confidence</span>
+            </div>
+          </div>
+          <p class="summary-note">ECE: 0.0051  |  MCE: 0.0902  |  mean confidence 99.49% vs accuracy 100.00%  -&gt; well-calibrated
+  [Remediation] Temperature scaling (T=1.146) reduces ECE to 0.0086</p>
+          
+            <div class="remediation-box">
+              <span class="remediation-tag">REMEDIATION AVAILABLE</span>
+              <p>Applying Temperature Scaling (<strong>T = 1.146</strong>) reduces ECE from <strong>0.0051</strong> to <strong>0.0086</strong> without changing top-1 accuracy. Use <code>lensight.TemperatureScaler(model).fit(val_loader)</code> to calibrate.</p>
+            </div>
+            
+
+          <div class="split-tables charts-row">
+            <div class="chart-container">
+              <h3>Per-Bin Empirical Accuracy (Low &rarr; High Confidence)</h3>
+              <svg viewBox="0 0 440 120" width="100%" height="120" xmlns="http://www.w3.org/2000/svg" style="max-width: 440px;"><line x1="0" y1="120" x2="440" y2="120" stroke="#cbd5e1" stroke-width="1.5"/><rect x="2.0" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="0"><title>Bin 1: 0.0%</title></rect><rect x="31.3" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="1"><title>Bin 2: 0.0%</title></rect><rect x="60.7" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="2"><title>Bin 3: 0.0%</title></rect><rect x="90.0" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="3"><title>Bin 4: 0.0%</title></rect><rect x="119.3" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="4"><title>Bin 5: 0.0%</title></rect><rect x="148.7" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="5"><title>Bin 6: 0.0%</title></rect><rect x="178.0" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="6"><title>Bin 7: 0.0%</title></rect><rect x="207.3" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="7"><title>Bin 8: 0.0%</title></rect><rect x="236.7" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="8"><title>Bin 9: 0.0%</title></rect><rect x="266.0" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="9"><title>Bin 10: 0.0%</title></rect><rect x="295.3" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="10"><title>Bin 11: 0.0%</title></rect><rect x="324.7" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="11"><title>Bin 12: 0.0%</title></rect><rect x="354.0" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="12"><title>Bin 13: 0.0%</title></rect><rect x="383.3" y="0.0" width="25.3" height="120.0" fill="#3b82f6" rx="2" class="bar" data-val="1.000" data-bin="13"><title>Bin 14: 100.0%</title></rect><rect x="412.7" y="0.0" width="25.3" height="120.0" fill="#3b82f6" rx="2" class="bar" data-val="1.000" data-bin="14"><title>Bin 15: 100.0%</title></rect></svg>
+            </div>
+            <div class="chart-container">
+              <h3>Calibration Gap |Confidence &minus; Accuracy|</h3>
+              <svg viewBox="0 0 440 120" width="100%" height="120" xmlns="http://www.w3.org/2000/svg" style="max-width: 440px;"><line x1="0" y1="120" x2="440" y2="120" stroke="#cbd5e1" stroke-width="1.5"/><rect x="2.0" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="0"><title>Bin 1: 0.0%</title></rect><rect x="31.3" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="1"><title>Bin 2: 0.0%</title></rect><rect x="60.7" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="2"><title>Bin 3: 0.0%</title></rect><rect x="90.0" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="3"><title>Bin 4: 0.0%</title></rect><rect x="119.3" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="4"><title>Bin 5: 0.0%</title></rect><rect x="148.7" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="5"><title>Bin 6: 0.0%</title></rect><rect x="178.0" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="6"><title>Bin 7: 0.0%</title></rect><rect x="207.3" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="7"><title>Bin 8: 0.0%</title></rect><rect x="236.7" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="8"><title>Bin 9: 0.0%</title></rect><rect x="266.0" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="9"><title>Bin 10: 0.0%</title></rect><rect x="295.3" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="10"><title>Bin 11: 0.0%</title></rect><rect x="324.7" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="11"><title>Bin 12: 0.0%</title></rect><rect x="354.0" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="12"><title>Bin 13: 0.0%</title></rect><rect x="383.3" y="109.2" width="25.3" height="10.8" fill="#ef4444" rx="2" class="bar" data-val="0.090" data-bin="13"><title>Bin 14: 9.0%</title></rect><rect x="412.7" y="119.5" width="25.3" height="0.5" fill="#ef4444" rx="2" class="bar" data-val="0.004" data-bin="14"><title>Bin 15: 0.4%</title></rect></svg>
+            </div>
+          </div>
+        </section>
+        
+
+<script>
+(function() {
+  const chips = document.querySelectorAll('.chip');
+  const cards = document.querySelectorAll('.gallery-card');
+  const searchInput = document.getElementById('gallery-search');
+  let currentFilter = 'all';
+
+  function applyFilter() {
+    const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    cards.forEach(card => {
+      const cardCluster = card.getAttribute('data-cluster');
+      const isLabelError = card.getAttribute('data-label-error') === 'true';
+      const caption = card.getAttribute('data-caption') || '';
+
+      let matchesFilter = false;
+      if (currentFilter === 'all') {
+        matchesFilter = true;
+      } else if (currentFilter === 'label_error') {
+        matchesFilter = isLabelError;
+      } else if (currentFilter.startsWith('cluster_')) {
+        const targetC = currentFilter.replace('cluster_', '');
+        matchesFilter = (cardCluster === targetC);
+      }
+
+      let matchesSearch = (!query || caption.includes(query));
+      card.style.display = (matchesFilter && matchesSearch) ? 'block' : 'none';
+    });
+  }
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentFilter = chip.getAttribute('data-filter');
+      applyFilter();
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener('input', applyFilter);
+  }
+
+  // Table row click-to-filter
+  document.querySelectorAll('tr[data-filter-cluster]').forEach(row => {
+    row.addEventListener('click', () => {
+      const c = row.getAttribute('data-filter-cluster');
+      const targetChip = document.querySelector(`.chip[data-filter="cluster_${c}"]`);
+      if (targetChip) {
+        targetChip.click();
+        const gallery = document.getElementById('gallery-section');
+        if (gallery) gallery.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

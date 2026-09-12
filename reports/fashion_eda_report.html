@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dataset Exploratory Analysis (EDA)</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --primary: #2563eb;
+    --border: #e2e8f0;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--bg); color: var(--text); line-height: 1.5; }
+  header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 36px 44px; border-bottom: 1px solid #334155; }
+  .header-content { max-width: 1040px; margin: 0 auto; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 700; color: #60a5fa; background: rgba(96,165,250,0.15); padding: 4px 8px; border-radius: 4px; margin-bottom: 8px; }
+  header h1 { margin: 0; font-size: 26px; }
+  .timestamp { color: #94a3b8; font-size: 13px; margin: 6px 0 0; }
+  section { max-width: 1040px; margin: 24px auto; background: var(--card); padding: 26px 32px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  h2 { margin-top: 0; font-size: 19px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  .subtitle { font-size: 13.5px; color: var(--muted); margin-top: -4px; margin-bottom: 16px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .stat-card { background: #f8fafc; border: 1px solid var(--border); padding: 14px 18px; border-radius: 8px; }
+  .stat-value { display: block; font-size: 28px; font-weight: 800; color: var(--primary); }
+  .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; font-weight: 600; }
+  .alert { padding: 12px 16px; border-radius: 8px; font-size: 13.5px; margin-bottom: 10px; }
+  .alert-danger { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+  .alert-warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+  .alert-info { background: #f0f9ff; border: 1px solid #bae6fd; color: #0369a1; }
+  .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 12px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-size: 12px; text-transform: uppercase; background: #f8fafc; }
+  .split { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+  .outlier-card { margin: 0; background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .img-wrap { width: 100%; aspect-ratio: 1; background: #000; overflow: hidden; }
+  .outlier-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  figcaption { padding: 8px 10px; font-size: 12px; border-top: 1px solid var(--border); background: #f8fafc; }
+  @media (max-width: 768px) { .split { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-content">
+    <div class="badge">LENSIGHT DATASET PROFILER</div>
+    <h1>Dataset Exploratory Analysis (EDA)</h1>
+    <p class="timestamp">Generated on 2026-09-09 12:04 &bull; Plug-and-Play CV Exploratory Analysis</p>
+  </div>
+</header>
+
+<section>
+  <h2>Health Summary &amp; Alerts</h2>
+  <div class="stat-grid">
+    <div class="stat-card"><span class="stat-value">1000</span><span class="stat-label">Total Samples</span></div>
+    <div class="stat-card"><span class="stat-value">1.3x</span><span class="stat-label">Imbalance Ratio</span></div>
+    <div class="stat-card"><span class="stat-value">28.3%</span><span class="stat-label">Mean Brightness</span></div>
+    <div class="stat-card"><span class="stat-value">27</span><span class="stat-label">Duplicate Pairs</span></div>
+  </div>
+  <div class="alert alert-danger"><strong>Duplicate Samples Detected:</strong> Found 27 duplicate image pairs. Verify train/val split isolation to avoid leakage.</div><div class="alert alert-info"><strong>Lighting Outliers:</strong> 83 underexposed (dark) and 0 overexposed images detected.</div>
+</section>
+
+<section>
+  <h2>Class Distribution &amp; Balance</h2>
+  <div class="split">
+    <div>
+      <p class="subtitle">Sample counts per category:</p>
+      <table>
+        <thead><tr><th>Category</th><th>Samples</th><th>Frequency</th></tr></thead>
+        <tbody><tr><td><strong>Sneaker</strong></td><td>115</td><td>11.5%</td></tr><tr><td><strong>T-shirt/top</strong></td><td>107</td><td>10.7%</td></tr><tr><td><strong>Trouser</strong></td><td>104</td><td>10.4%</td></tr><tr><td><strong>Bag</strong></td><td>102</td><td>10.2%</td></tr><tr><td><strong>Sandal</strong></td><td>100</td><td>10.0%</td></tr><tr><td><strong>Shirt</strong></td><td>100</td><td>10.0%</td></tr><tr><td><strong>Ankle boot</strong></td><td>99</td><td>9.9%</td></tr><tr><td><strong>Coat</strong></td><td>95</td><td>9.5%</td></tr><tr><td><strong>Dress</strong></td><td>92</td><td>9.2%</td></tr><tr><td><strong>Pullover</strong></td><td>86</td><td>8.6%</td></tr></tbody>
+      </table>
+    </div>
+    <div>
+      <p class="subtitle">Category representation chart:</p>
+      <svg viewBox="0 0 500 150" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" style="max-width: 500px;"><line x1="0" y1="126" x2="500" y2="126" stroke="#cbd5e1" stroke-width="1.5"/><rect x="2.0" y="8.8" width="46.0" height="117.2" fill="#3b82f6" rx="2"><title>T-shirt/top: 107</title></rect><rect x="52.0" y="12.1" width="46.0" height="113.9" fill="#3b82f6" rx="2"><title>Trouser: 104</title></rect><rect x="102.0" y="31.8" width="46.0" height="94.2" fill="#3b82f6" rx="2"><title>Pullover: 86</title></rect><rect x="152.0" y="25.2" width="46.0" height="100.8" fill="#3b82f6" rx="2"><title>Dress: 92</title></rect><rect x="202.0" y="21.9" width="46.0" height="104.1" fill="#3b82f6" rx="2"><title>Coat: 95</title></rect><rect x="252.0" y="16.4" width="46.0" height="109.6" fill="#3b82f6" rx="2"><title>Sandal: 100</title></rect><rect x="302.0" y="16.4" width="46.0" height="109.6" fill="#3b82f6" rx="2"><title>Shirt: 100</title></rect><rect x="352.0" y="0.0" width="46.0" height="126.0" fill="#3b82f6" rx="2"><title>Sneaker: 115</title></rect><rect x="402.0" y="14.2" width="46.0" height="111.8" fill="#3b82f6" rx="2"><title>Bag: 102</title></rect><rect x="452.0" y="17.5" width="46.0" height="108.5" fill="#3b82f6" rx="2"><title>Ankle boot: 99</title></rect><text x="4" y="144" font-size="11" fill="#64748b">Classes &rarr;</text></svg>
+    </div>
+  </div>
+</section>
+
+
+        <section>
+          <h2>Flagged Visual Outliers</h2>
+          <p class="subtitle">Representative visual defects identified during data profiling:</p>
+          <div class="gallery"><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAADm0lEQVR4nN1VzUsyXRS/1zuamoj4FTpWQlQYjgzRSgikzAiCiIgoqEVtgiCoFkGLKNrPPxBB0MemRZtKaiFKtunDyEW0qEVILUKMbHJ0cmZenm7Ma1q+vg/P6vmtzpx7zu983XMHgL8KEEKEEIRQ/pRlDK/XCwBobm7GelghqUKhEASh9Mjn81EU1djY6PF4IISBQCCXy/0HV6lybGysqalpYmLi6uoqGAw+PDyEw2GGYWia/tcRlCWVJEn+dLlcBEHMzMywLGs0GmOxWCQSicVibR+IRCI8z9/e3gIAFGVIZUatVuv3+xFCLy8va2trdrs9lUoxDJNIJCRJurm5EUWxq6urs7MT25cjlYej0+lyuZzb7V5YWIhGo6urq9PT0wCAp6cnAIDVak2lUhDC8fFxt9sNACDKkIqiiJPlOA5C2NHRsbm5OTk5WWRmMpn0ev3FxQXP81VVVSaTqaLpF0Kj0WSzWRwMN72vrw8hdHd3l06nbTZbNpstV35pKxBCv1qm+OJlsVhUKhW+djqdjiCISkkFQZAkSRAEjuOK7kZ1dfXU1FR3dzfP8yzLchynqPyGFgZACMn5JpPJy8vLtra219fXhoaGTCbzv3taBJqmBUG4vr7u7e1Vq9U6nW5jY6PS8guBOwsAmJ+fHx4eZll2dHRUFMWDg4PT01Oe53+HVBAEp9O5vr5OUZRSqRwYGHh+flYqlXa7nef5H1P4NjuCILRaLd7Xvb09hmF2dnbk7tM03dPTYzAYijcKv0OlL5s8/UwmQ5Lk7OxsKBQiSXJwcFBeZUmSEEKZTOb7NZU+UKjBMXDIpaWlx8dHj8czNDRUaCOKotlsxuV/WVN89QwGQ01Njc1mC4fDchgsLC8v5/N5j8fT39+PNQTxiyGfzyOEzGbzp7IoRwBAS0tLbW1tOp3WarW4HAySJL1er1qtbm9vL3QRRRELdXV1X0orlUuxv79/f39PUVSRHntRFHV0dPSjM4QwGAzG4/GRkRFZubi4KAgCwzDf2uPpn52dfap8Pp/X66UoiiRJg8Gg0WgghLu7u29vb+fn51arFQAQCASSyWQoFFKpVD+l0traGo1GsUw4P2CxWPR6/fv7eyqVEkUxkUhsbW3F43G/349DnpyczM3N4Rfz218bx3GHh4efuRcemEwmh8NhNBodDgeEsL6+3uVy6fX64+Pj7e3tRCLxY8sAcDqdsVjMaDSWsfkdrKys/GHGQvwD5sCJEE6N6FkAAAAASUVORK5CYII=" alt="Underexposed (Dark)"/></div><figcaption><strong>#8</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAADAElEQVR4nO2Tv0vrUBTHb2/T2CZtTIg2mAQsSiuC0kVF1M1CXQvq4OJSBxXF1UH8I8TRwSGLbg7ipu5aoVpFpUWlFkzQNpqmaX7cPJ6B8p48nN/gZzpwD997v+d7LgA//PD/4/vuzOdzXderV1dXc7mcLMujo6OKouTz+efn5y/96+vrhULh4ODgO1EMw2zbBgCkUql8Pq8oSiaTGRsbazQayWSyVCqdnZ2dn5/f3NzEYrHJycmhoSFZljc3N/8tCiFECAEA+vv7Z2ZmBEH4+PhQVdWyLMMwbNsOhUKqqrIsy3GcoiiO4+zt7c3NzcXj8fn5eeyLXw/HcQAAU1NTa2tr29vbxWIxkUgAAKLRqOu6BEFomgYhbDQaEMJ6vb6/v48QEkWRYRhRFL+KIoQghH19fbe3txsbG9lsliTJUqkkSVKrjabpdDqdTCZ7eno0TSsWi52dnRzHEQRhmqYoir4vmYyMjDAMs7y8fHx8vLu7G4vFJEmanZ29vLxsjbjFwMDA0tKSZVmBQIDneRzHq9Xq1tYWBiF0PwEALC4udnd3X19fn56eplKpk5OTiYmJw8PDu7s7AIDrut7drResrKzwPO/3+yORCEVRtVpN07RKpYJ5gXiUy+WLiwsMw+7v76+urkRRzOVygiA0m00AgDdoTx0AkE6nFxYWjo6O4vH46+urruuqqjqO81v0TzvDw8MMwwAAOI4zDOPx8ZHn+d7e3taGdXV1URQliiJJkjzPT09PPz09VavVer1uWZZpmgRB2LbtGx8fz2QyLy8vtVqto6ODZdlQKBT+xAtN13VJkryBkiSJELJt2zRNx3EQQu3t7ZFIJPCJZVnRaHRnZ8fnRSkIAo7jsiwjhILBIEVRLMu2tbWRJAkhTCQSDw8PBEFg2G9n3toNDg6qn7iuGwgEAACFQkEUxWw2+9fy+/3+YDBIkmQ4HIYQUhTVbDZxHHddl6ZpCGGlUjEMA8MwgiBomsYwzLKscDjsOM77+7uu6+Vy+e3t7Ztf+sMP/w2/AFG4c6Ehh1IhAAAAAElFTkSuQmCC" alt="Underexposed (Dark)"/></div><figcaption><strong>#13</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAACLElEQVR4nO2SPWsiQRjHZ2Z3HUdXY5ZdFiEs0SAEFAlI0oilpaliI1a26fwEViGfwFL8ClYpErAI+QDbpEkhBCHooln2hVVnxz3iQLi75OC48vBXPQPzf17/AOzZs+cvgBDW6/WTkxMe/4se/EQ+nx8Oh71ebzwed7vdbyXX19fVavVD+22uKIr4U5KkYrF4eXmZzWYJIbIsPz09HR4e3t/fPz4+fqoqlUq/3y+VSqPRqNVqQU6047cChmHc3NwghF5fX9/f35fLpeu6jUbDtu3VavX29rZYLCilp6enhmFYltVut2ezWblc/qVThJAsy6qqGoahKEqhUMhkMqZpnp2dOY5zdXVl2/bDwwMAYLPZHB0dQQhjsdh6vQ7DMJlMxuNxXdebzabIc/FqiqIcHBwkEgnXdUVRhBA+Pz/XarXlcjmbzSzLSqVS0+kUAJBMJk3TzGQyvu/LskwImUwmjuNcXFyoqgrb7fbt7e1gMLAsy3GcIAiiKPI8T9O0IAgURYmi6OXlhRAiCAKEUJZljHEikcAYAwAIIZqmUUoZY5qmHR8fdzod8e7uLgzD8/PzYrHIl+B5HiEkl8tRSrmeZxQEgc/BGAvDUBRF13V93/c8b7vd8p3oul6pVGA6nXYc56s/JEnabrcYY0ophDAejwMAGGN0x9erfpJKpT4Old4hCAJvgQfcWBjj1WrFGEMIccNxz0EI0Q6MsSiK/D9CKBaLzefzP9Xbs+e/5wc8DvHI+lI+AQAAAABJRU5ErkJggg==" alt="Underexposed (Dark)"/></div><figcaption><strong>#14</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAABoklEQVR4nO2SvYrqQBTHM8nRpFGDRgU7RdBCiKKFlvaWvoSNta/gS9jbiBZWgr6A2CiICGK0EBQ/g5mYTGYu18BduOxusdUW+XXzn/PxP4fDcR4eHr8c9NVHPp/PZrObzWa/31uWdT6fP3IQYox9VxQAHMdxH27obDajlHY6nUqlEgqFTqeT3++XJGk6nfb7/dVqxXEcz/Of1mVv8X+n9Xq91WqVSqV/psrlciqVejwesVgsk8ksFotut/t6vT73iBDP86hYLJqmebvdXGm32yWTSU3TAIAQ4obKstxoNNbr9WQyyeVyqqoOBgNN074cv91uV6vV0Wh0OByez2ehUBgOh6IowhvGmKIogUAgGo0CwPV6TafTwWBwuVyOx2NRFG3bVhRFkiQAwBj7fL75fP53/GazWavVIpEIpdQwDEqpruuJRGK73QqC4G7Q/wYhJIoiY4wQYhiG25UxRil1FYxxr9f72CkAqKoaDofj8bgsywAgCILjOIwxhNDxeNR1/X6/Xy4X0zQJIYIgmKZJKbUsy7ZtjLFt29+chIeHB/cz/gDAkdCakdSR8wAAAABJRU5ErkJggg==" alt="Underexposed (Dark)"/></div><figcaption><strong>#30</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAADxklEQVR4nJVVyU7jQBCtXt22Y5sQliAhBYkL38D3If6HI/ccEGcO3BDKIQpLNvDa22hckocJIaOpU+xOva5671UZ4OcghACAUur5+Xk8Ht/d3a3X66urq6+nW4PvAPXeA0CSJN57pRRj7ObmZrFYfD39v0jTdDQaXVxcAMD19bVzrmmax8fH4+NjKeX5+flgMOB8e018K9xwOMzz3Bjz/v4OAOPx+P7+/uHhQSl1eXl5e3tbVVUcx4PB4OPjYzqdbiCQ76Cj0SjP87qusZAwDAFgNptZawHg7Ozs8/PTGCOEAIC9vb2Xl5fVarULNMuyJEmqqiKEWGsZY1rroigODg7CMFwul3VdM8aklJRS5xylVEo5mUx2tc85J4SEYViWJUrBGMuyjDGW5znn3HtPCHHOoVaU0u82oBvP1tqmaYIgIIRQSo0xWDIA1HXdOYkQorUeDAZSyu82oN8rbZomiqIkSYwxQRBgdUKINE1/J9DfKd57xlgcx1rrf4NKKbE1IQQhhDFGCOGcW2uxdiEEpTQMQ0JImqacc601ivYjp74tAVGEEN57Ywyl1FqrtXbOWWsppWVZ9nq9IAicc6iB1noXqBDCGAMAiIIveRtILopWFAXn3BiD0u1q33uPWmVZVpYl5xx5wJYRlFIaBAEay3vfNM0GKP/rhtYfzjnG2OHhIXaNCd77qqpQNGutc05Kiddgcz9WyjlnjOH/ZrOZUgoA0OEAgJw0TWOMsdZyzqMocs4hOT+CEkK89865/f39ug2UxVqrlOoMhBCvr6+UUsbYvy3VNI21NgzDxWKB4uD7sizzPGeMBUGAg18UxdvbW5qmzrmv0sMGqBAC0/I8X61WKD2appMYRUOVJpNJHMffdyvdEMpamyRJURRlWUopGWPIphAiSRIAqKqKtmGMmU6naZpSSneBuraROI6rNnDA8chaW1UVmkFr3TSNEAJHwLfxl+DwJWwbcRx3zaJQQRB47+u67njA2c3zXCnVbZztlXLOnXM4nZjMGENOKKVoUvQyehOdGwTBLqFY6w8p5XQ6RaZw9o0xURThEunKL8sSdYuiCC28HZS0gcu0m3r8Std1PZ/Pca0QQvI8Pzk5kVLO5/NOz+2c6jahU8m1geojD9iHc84Yk6ZpFEXY+66FIqWsqmo4HB4dHeEOlFJ2nxCsGjdDHMdPT0/L5bLf71trd7WPM97r9ZIkoZQqpXCisiyLokgphcwAQBRFeMfp6Wn3+w+NXx86D+DNWCalNEkSIcR6vcZVW1UVTjMA9Pv95XK5Mf6/AAlKkPTXRr46AAAAAElFTkSuQmCC" alt="Underexposed (Dark)"/></div><figcaption><strong>#33</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAAD40lEQVR4nI1WzUrzTBSeTKaTpG2a/hJLkSq8SNGNFJddiDfgypW48QK8BEHwEgRBdOFSxJvwFlwVtLZCFqGmaZM0TZNx8vL1fITS1lefRZhOzjznzHnOOSlC32N7e/vs7EwQhIX929vbSqXyj4Nk4bcgCPV6fW1tbTgc9vv9o6OjVqslimK5XPZ9HyHUarWurq4Gg0Gj0SCEMMba7XYcx//wgXZ3d5vNZrValSRJmGFra+vp6SmO49fX15ubG13XE2NVVTc2Nvb29hYjQ3OoVquqqrquG85ACLFte9mxJEmE/HdFjDGlVNM0znm3200McLJKpVKNRsN13UqlIssyYywMQ1VVRVGctxFFcTqdjsfjMAwxxrIsT6fTYrE4fwOcrHRdtyyrUCg4jlMqlYIgGI/Hrut+fX2BgSiKURRxzmu1mqIojDHOuSAIYKxp2gqh6vV6p9OpVqvZbPbl5eXk5OTg4OD5+dk0TUpprVbTdb3dbvd6vWKx2Gw2S6XS4+OjbduapnU6nflIhWSlaVq1WqWUrq+v93o9z/MQQr1e7/z8nFJ6NcPFxcXx8bFhGNfX1xjjnZ0dTdMmk8lwOPR9/+PjY/H6o9HIMAw6g6ZphJButxvH8f39vWEYg8Hg4eHBNM3Ly8u7u7soiiilhUJhf39f0zTTNBNGtKA+FMDp6alhGJZlvb29+b5vWZbneVCS2Ww2l8sJgjCdTv/8+RPHse/7YPxtSSU4PDzc3Nxst9uO44xGI9u2U6kUQiifzyOEOOeyLKuq+v7+3ul00BLw8hZCyDRNSZIsyxqNRhhjVVXJDJ7n+TNkMhlCiOu60IS/Iv38/JxOp4yxZAdyDTWPEHJdt1QqrTyLlknBreu6vu8TQiiljLEgCMABxhh4HceBV78aKIAwDIMg4JxTSvkMGP/vHlqTMQbdjFYBr9zlnMN54E2n03gOMBbCMEyn0wih5RGFV5JC44uiCL0IPhIAYxAEtVrtV5HGM7f5fD6KojiOgTS5e4LJZOJ53ny//xxppVKBnC5LwTknhOi6PplMKKUww+YnGfqOVFEUIMUYLwTLZuCc9/v9JAML+cErSXO53Hg8Zowlw3hefRBQVdUoisrl8rJWeCUpOE+4gCWpJ845SD8YDBZi/JZUkiRI03dhyrIMtUwpVRTlV21aLBYRQrZtJ8UPXw5KaRiGIFTiD4rkZ1JFUcIwzOVyoAkcBokgD+AAmlhRFBhgP5ASQiaTCUg8TxoEQVIMyZMxlsvlfiYtlUqQJkopKDbfVEnvUkrBWSaTWQxrmdQwjGTWwY40gyzLwB4EASHEcRzXdQkh8M9lHn8BhRpO9J+MOt8AAAAASUVORK5CYII=" alt="Underexposed (Dark)"/></div><figcaption><strong>#34</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAACeElEQVR4nO1TMWsiQRid3Z3dEcyuu7IRTLBQULCQLIpVsEu6YCNWdiGEYKOB/AQLKxv/gZ3YqMWi+QnRQgkkIBbRIiGgqJtgWHd39khGRC53cFx1HL5qZnjz3vu+bwaAHXb4H0BR1GZ9fHzcbDYRQgAAmqb/XhRCSBaCINzf33c6nXw+/91124P6Q2mXy1Wv10VRbLfb0Wj07e2t0WhUKpVfkimGYTDGAADbtrfNaZq2LAsAwHHc9fV1sVhUFKXf7wMArq6uFEU5Ojp6fX3VNG0wGJTL5cPDw4eHB3KXYlnWNE2iSArZVne73aqqGoaRyWTG4/HmnOO4RCJxdnYWiUQEQdA0TZKkYrFYq9UYhlm3gwht5GRZLhQKCKFQKNTtdnO5HLHc9gMA+P3+arWqqupoNDo5ObEsK5vNvr+/r9Ntj/j8/FxV1W63W6vVotHo95ZtZnJxcdHr9RRFIdtkMimK4udsbdveKJZKpWAw6HQ6eZ5/enpKp9PkHEJomua6X1t5g8GgpmkHBwe9Xg8A0Gw2166kasK7vb3t9/scx02nU5ZlU6kUIRFFwsQYE3IgECCBXl5efioFkiAIIVEUW62WJEnxeHw2m/E8f3l5ORwODcMAABiGsVqtEEJ7e3scxwmCsFwudV33+XzhcHgwGMiyPJlMMMYfHx+U1+s9PT1drVa2bSOE5vO5YRg3NzeLxYJhmMfHx7u7O6/XO51OTdMkT43knUwmHo8nFouNRiMIIcZ4uVzKsvz8/PxJ2t/fp6jPB2vbtmVZ+hcghCzL8jyPMXY4HKZp6rpufYHEwRgHAgEIoSRJ9BcghIIgzOfz3/+hHXb4d/ADTXEv4BRKquIAAAAASUVORK5CYII=" alt="Underexposed (Dark)"/></div><figcaption><strong>#62</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAABVUlEQVR4nO3QsYoCMRAG4D/jJlHIIq67KgoWNmLva/gCYu8DWFr7BoKNYGMh2NpZWYtgZ2FhL+Jio6DZ5DgXjkM86yv2q4aB+ZMZIJFI/HPsbbfVatXr9XK57HkegEqlEobh4XAIw3C5XG42m/dZjFlrX1sAut3uarXa7/fj8bjZbAohXNft9XrW2u12OxwOZ7PZZDJ5GfwNLxqNxmKx+GupTqez2+2m0+l6vR6NRp/2932/VqtVq1UA8/m83W4DkFL6vp/NZvP5fKFQyOVyP19QSvX7/ev1OhgM4nGlVP4pCIJisaiUYqVSyXVdYwwRnc9nxlgQBESktWaMRVEUZxER5/x2u51OJwBaawCe56WeAMRFOp2+XC7f7zuOI4QwxjiOI6XUWnPO4yAA8e0554/Hg4hSqZTW+n6/SykzmUwURUIIIjLGWGs558fj8dNlEonEv/AFYGt2tM17e0MAAAAASUVORK5CYII=" alt="Underexposed (Dark)"/></div><figcaption><strong>#63</strong>: Underexposed (Dark)</figcaption></figure></div>
+        </section>
+        
+
+</body>
+</html>

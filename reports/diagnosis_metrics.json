@@ -1,0 +1,139 @@
+{
+  "misclassification": {
+    "total_examples": 160,
+    "total_errors": 38,
+    "accuracy": 0.7625,
+    "error_rate": 0.23750000000000004,
+    "confusion_matrix": [
+      [
+        0,
+        37,
+        1,
+        0
+      ],
+      [
+        0,
+        38,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        37,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        47
+      ]
+    ],
+    "top_confused_pairs": [
+      {
+        "true": "cat",
+        "pred": "dog",
+        "count": 37
+      },
+      {
+        "true": "cat",
+        "pred": "car",
+        "count": 1
+      }
+    ],
+    "n_clusters": 3,
+    "clusters": [
+      {
+        "cluster": 2,
+        "size": 20,
+        "dominant_true": 0,
+        "dominant_pred": 1,
+        "avg_confidence": 0.5607261538505555
+      },
+      {
+        "cluster": 0,
+        "size": 17,
+        "dominant_true": 0,
+        "dominant_pred": 1,
+        "avg_confidence": 0.5603821908726412
+      },
+      {
+        "cluster": 1,
+        "size": 1,
+        "dominant_true": 0,
+        "dominant_pred": 2,
+        "avg_confidence": 0.9993977546691895
+      }
+    ],
+    "suspected_label_errors": [
+      {
+        "index": 10,
+        "true_label": "cat",
+        "pred_label": "car",
+        "confidence": 0.9993977546691895,
+        "cluster": 1
+      }
+    ]
+  },
+  "calibration": {
+    "n_bins": 15,
+    "ece": 0.032487935572862586,
+    "mce": 0.05612909158070878,
+    "overall_accuracy": 0.7625,
+    "overall_confidence": 0.7949879765510559,
+    "bin_confidence": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5627957582473755,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.9998633861541748
+    ],
+    "bin_accuracy": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5066666666666667,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.9882352941176471
+    ],
+    "bin_counts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      75,
+      0,
+      0,
+      0,
+      0,
+      0,
+      85
+    ],
+    "suggested_temperature": 1.5371185541152954,
+    "calibrated_ece": 0.04752773903310298
+  }
+}

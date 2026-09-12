@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ResNet-18 Fashion-MNIST Diagnostic Report</title>
+<style>
+  :root {
+    --bg-page: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --primary: #2563eb;
+    --primary-light: #eff6ff;
+    --border: #e2e8f0;
+    --danger: #ef4444;
+    --danger-bg: #fef2f2;
+    --success: #10b981;
+    --warning: #f59e0b;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 0; background: var(--bg-page); color: var(--text-main); line-height: 1.5; }
+  header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 40px 48px; border-bottom: 1px solid #334155; }
+  .header-content { max-width: 1040px; margin: 0 auto; }
+  .header-badge { display: inline-block; font-size: 11px; letter-spacing: 0.1em; font-weight: 700; color: #60a5fa; background: rgba(96,165,250,0.15); padding: 4px 8px; border-radius: 4px; margin-bottom: 8px; }
+  header h1 { margin: 0; font-size: 28px; font-weight: 700; }
+  .timestamp { color: #94a3b8; margin: 8px 0 0; font-size: 13px; }
+  section { max-width: 1040px; margin: 28px auto; background: var(--card-bg); padding: 28px 36px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+  .alert-section { background: var(--danger-bg); border: 1px solid #fca5a5; }
+  .alert-header { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
+  .alert-icon { font-size: 28px; color: var(--danger); line-height: 1; }
+  .alert-header h2 { margin: 0 0 4px; font-size: 18px; color: #991b1b; }
+  .alert-header p { margin: 0; font-size: 13.5px; color: #7f1d1d; }
+  h2 { margin-top: 0; font-size: 20px; font-weight: 700; color: #0f172a; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  h3 { font-size: 15px; color: #334155; margin: 0 0 10px; }
+  h3 small { font-weight: 400; color: var(--text-muted); font-size: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  th { color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; background: #f8fafc; }
+  .interactive-table tr.filter-row:hover, .interactive-table tbody tr:hover { background: var(--primary-light); cursor: pointer; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+  .badge-true { background: #e0e7ff; color: #3730a3; }
+  .badge-pred { background: #fee2e2; color: #991b1b; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: #f8fafc; border: 1px solid var(--border); padding: 16px 20px; border-radius: 8px; }
+  .stat-value { display: block; font-size: 30px; font-weight: 800; color: var(--primary); }
+  .stat-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; }
+  .split-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .chart-container { background: #f8fafc; border: 1px solid var(--border); padding: 16px; border-radius: 8px; }
+  .remediation-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px 18px; margin: 16px 0; color: #166534; font-size: 14px; }
+  .remediation-tag { font-size: 11px; font-weight: 800; color: #15803d; letter-spacing: 0.08em; display: block; margin-bottom: 4px; }
+  .remediation-box strong { color: #14532d; }
+  .summary-note { color: var(--text-muted); font-size: 14px; margin-bottom: 12px; }
+  .gallery-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .gallery-header h2 { border: none; padding: 0; margin: 0; }
+  #gallery-search { padding: 8px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; width: 260px; }
+  #gallery-search:focus { outline: none; border-color: var(--primary); }
+  .filter-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .chip { background: #f1f5f9; border: 1px solid var(--border); padding: 6px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 600; color: #334155; cursor: pointer; transition: all 0.15s ease; }
+  .chip:hover { background: #e2e8f0; }
+  .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .chip-alert { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+  .chip-alert.active { background: var(--danger); color: white; border-color: var(--danger); }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+  .gallery-card { margin: 0; background: #ffffff; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .gallery-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+  .card-img-wrapper { width: 100%; aspect-ratio: 1; overflow: hidden; background: #000; }
+  .gallery-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  figcaption { font-size: 12px; color: #334155; padding: 10px 12px; font-weight: 500; border-top: 1px solid var(--border); }
+  @media (max-width: 768px) {
+    .split-tables { grid-template-columns: 1fr; }
+    section { padding: 20px; }
+    header { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+        <header>
+          <div class="header-content">
+            <div class="header-badge">LENSIGHT DIAGNOSTIC DASHBOARD</div>
+            <h1>ResNet-18 Fashion-MNIST Diagnostic Report</h1>
+            <p class="timestamp">Generated on 2026-09-09 11:48 &bull; Self-contained report</p>
+          </div>
+        </header>
+        
+                <section class="alert-section">
+                  <div class="alert-header">
+                    <span class="alert-icon">&#9888;</span>
+                    <div>
+                      <h2>Data Quality Alert: 22 Suspected Label Errors</h2>
+                      <p>The model is highly confident (&ge; 80%) yet contradicts the dataset annotation. In real-world CV, these are overwhelmingly mislabeled ground-truth examples or ambiguous edge cases.</p>
+                    </div>
+                  </div>
+                  <table class="interactive-table">
+                    <thead><tr><th>Sample</th><th>Dataset Label</th><th>Model Prediction</th><th>Confidence</th><th>Failure Mode</th></tr></thead>
+                    <tbody><tr><td><code>#21</code></td><td><span class='badge badge-true'>Sandal</span></td><td><span class='badge badge-pred'>Sneaker</span></td><td><strong>99.6%</strong></td><td>Cluster 0</td></tr><tr><td><code>#68</code></td><td><span class='badge badge-true'>Ankle boot</span></td><td><span class='badge badge-pred'>Sneaker</span></td><td><strong>99.5%</strong></td><td>Cluster 0</td></tr><tr><td><code>#147</code></td><td><span class='badge badge-true'>Shirt</span></td><td><span class='badge badge-pred'>Dress</span></td><td><strong>97.1%</strong></td><td>Cluster 3</td></tr><tr><td><code>#239</code></td><td><span class='badge badge-true'>Coat</span></td><td><span class='badge badge-pred'>Pullover</span></td><td><strong>96.9%</strong></td><td>Cluster 2</td></tr><tr><td><code>#244</code></td><td><span class='badge badge-true'>Shirt</span></td><td><span class='badge badge-pred'>Pullover</span></td><td><strong>96.7%</strong></td><td>Cluster 2</td></tr><tr><td><code>#50</code></td><td><span class='badge badge-true'>Coat</span></td><td><span class='badge badge-pred'>Pullover</span></td><td><strong>95.4%</strong></td><td>Cluster 2</td></tr><tr><td><code>#89</code></td><td><span class='badge badge-true'>Shirt</span></td><td><span class='badge badge-pred'>Pullover</span></td><td><strong>94.9%</strong></td><td>Cluster 1</td></tr><tr><td><code>#17</code></td><td><span class='badge badge-true'>Coat</span></td><td><span class='badge badge-pred'>Pullover</span></td><td><strong>93.9%</strong></td><td>Cluster 2</td></tr></tbody>
+                  </table>
+                </section>
+                
+        <section>
+          <h2>Accuracy &amp; Failure Modes</h2>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <span class="stat-value">79.3%</span>
+              <span class="stat-label">Accuracy</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">62</span>
+              <span class="stat-label">Errors / 300</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">4</span>
+              <span class="stat-label">Failure Clusters</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">22</span>
+              <span class="stat-label">Suspected Annotation Errors</span>
+            </div>
+          </div>
+
+          <div class="split-tables">
+            <div>
+              <h3>Most Confused Class Pairs <small>(click to filter)</small></h3>
+              <table class="interactive-table">
+                <thead><tr><th>True Class</th><th>Predicted</th><th>Error Count</th></tr></thead>
+                <tbody><tr class="filter-row" data-filter-pair="4_2"><td><span class='badge badge-true'>Coat</span></td><td><span class='badge badge-pred'>Pullover</span></td><td><strong>12</strong></td></tr><tr class="filter-row" data-filter-pair="6_2"><td><span class='badge badge-true'>Shirt</span></td><td><span class='badge badge-pred'>Pullover</span></td><td><strong>11</strong></td></tr><tr class="filter-row" data-filter-pair="4_3"><td><span class='badge badge-true'>Coat</span></td><td><span class='badge badge-pred'>Dress</span></td><td><strong>6</strong></td></tr><tr class="filter-row" data-filter-pair="6_0"><td><span class='badge badge-true'>Shirt</span></td><td><span class='badge badge-pred'>T-shirt/top</span></td><td><strong>5</strong></td></tr><tr class="filter-row" data-filter-pair="5_7"><td><span class='badge badge-true'>Sandal</span></td><td><span class='badge badge-pred'>Sneaker</span></td><td><strong>5</strong></td></tr><tr class="filter-row" data-filter-pair="8_2"><td><span class='badge badge-true'>Bag</span></td><td><span class='badge badge-pred'>Pullover</span></td><td><strong>3</strong></td></tr><tr class="filter-row" data-filter-pair="6_3"><td><span class='badge badge-true'>Shirt</span></td><td><span class='badge badge-pred'>Dress</span></td><td><strong>3</strong></td></tr><tr class="filter-row" data-filter-pair="2_3"><td><span class='badge badge-true'>Pullover</span></td><td><span class='badge badge-pred'>Dress</span></td><td><strong>3</strong></td></tr></tbody>
+              </table>
+            </div>
+            <div>
+              <h3>Failure Clusters <small>(click to filter)</small></h3>
+              <table class="interactive-table">
+                <thead><tr><th>Cluster</th><th>Size</th><th>Dominant Pattern</th><th>Avg Conf</th></tr></thead>
+                <tbody><tr class="filter-row" data-filter-cluster="3"><td><strong>Cluster 3</strong></td><td>19 errors</td><td><span class='badge badge-true'>Coat</span> &rarr; <span class='badge badge-pred'>Dress</span></td><td>63.3%</td></tr><tr class="filter-row" data-filter-cluster="1"><td><strong>Cluster 1</strong></td><td>17 errors</td><td><span class='badge badge-true'>Shirt</span> &rarr; <span class='badge badge-pred'>Pullover</span></td><td>63.8%</td></tr><tr class="filter-row" data-filter-cluster="2"><td><strong>Cluster 2</strong></td><td>17 errors</td><td><span class='badge badge-true'>Coat</span> &rarr; <span class='badge badge-pred'>Pullover</span></td><td>73.4%</td></tr><tr class="filter-row" data-filter-cluster="0"><td><strong>Cluster 0</strong></td><td>9 errors</td><td><span class='badge badge-true'>Sandal</span> &rarr; <span class='badge badge-pred'>Sneaker</span></td><td>76.2%</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        
+        <section>
+          <h2>Confidence Calibration</h2>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <span class="stat-value">0.0750</span>
+              <span class="stat-label">Expected Calibration Error (ECE)</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">0.3047</span>
+              <span class="stat-label">Max Calibration Error (MCE)</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value">86.4%</span>
+              <span class="stat-label">Mean Model Confidence</span>
+            </div>
+          </div>
+          <p class="summary-note">ECE: 0.0750  |  MCE: 0.3047  |  mean confidence 86.44% vs accuracy 79.33%  -&gt; mildly overconfident/underconfident
+  [Remediation] Temperature scaling (T=1.440) reduces ECE to 0.0501</p>
+          
+            <div class="remediation-box">
+              <span class="remediation-tag">REMEDIATION AVAILABLE</span>
+              <p>Applying Temperature Scaling (<strong>T = 1.440</strong>) reduces ECE from <strong>0.0750</strong> to <strong>0.0501</strong> without changing top-1 accuracy. Use <code>lensight.TemperatureScaler(model).fit(val_loader)</code> to calibrate.</p>
+            </div>
+            
+
+          <div class="split-tables charts-row">
+            <div class="chart-container">
+              <h3>Per-Bin Empirical Accuracy (Low &rarr; High Confidence)</h3>
+              <svg viewBox="0 0 440 120" width="100%" height="120" xmlns="http://www.w3.org/2000/svg" style="max-width: 440px;"><line x1="0" y1="120" x2="440" y2="120" stroke="#cbd5e1" stroke-width="1.5"/><rect x="2.0" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="0"><title>Bin 1: 0.0%</title></rect><rect x="31.3" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="1"><title>Bin 2: 0.0%</title></rect><rect x="60.7" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="2"><title>Bin 3: 0.0%</title></rect><rect x="90.0" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="3"><title>Bin 4: 0.0%</title></rect><rect x="119.3" y="120.0" width="25.3" height="0.0" fill="#3b82f6" rx="2" class="bar" data-val="0.000" data-bin="4"><title>Bin 5: 0.0%</title></rect><rect x="148.7" y="80.0" width="25.3" height="40.0" fill="#3b82f6" rx="2" class="bar" data-val="0.333" data-bin="5"><title>Bin 6: 33.3%</title></rect><rect x="178.0" y="60.0" width="25.3" height="60.0" fill="#3b82f6" rx="2" class="bar" data-val="0.500" data-bin="6"><title>Bin 7: 50.0%</title></rect><rect x="207.3" y="60.0" width="25.3" height="60.0" fill="#3b82f6" rx="2" class="bar" data-val="0.500" data-bin="7"><title>Bin 8: 50.0%</title></rect><rect x="236.7" y="51.4" width="25.3" height="68.6" fill="#3b82f6" rx="2" class="bar" data-val="0.571" data-bin="8"><title>Bin 9: 57.1%</title></rect><rect x="266.0" y="80.0" width="25.3" height="40.0" fill="#3b82f6" rx="2" class="bar" data-val="0.333" data-bin="9"><title>Bin 10: 33.3%</title></rect><rect x="295.3" y="50.0" width="25.3" height="70.0" fill="#3b82f6" rx="2" class="bar" data-val="0.583" data-bin="10"><title>Bin 11: 58.3%</title></rect><rect x="324.7" y="40.0" width="25.3" height="80.0" fill="#3b82f6" rx="2" class="bar" data-val="0.667" data-bin="11"><title>Bin 12: 66.7%</title></rect><rect x="354.0" y="45.7" width="25.3" height="74.3" fill="#3b82f6" rx="2" class="bar" data-val="0.619" data-bin="12"><title>Bin 13: 61.9%</title></rect><rect x="383.3" y="31.3" width="25.3" height="88.7" fill="#3b82f6" rx="2" class="bar" data-val="0.739" data-bin="13"><title>Bin 14: 73.9%</title></rect><rect x="412.7" y="5.5" width="25.3" height="114.5" fill="#3b82f6" rx="2" class="bar" data-val="0.955" data-bin="14"><title>Bin 15: 95.5%</title></rect></svg>
+            </div>
+            <div class="chart-container">
+              <h3>Calibration Gap |Confidence &minus; Accuracy|</h3>
+              <svg viewBox="0 0 440 120" width="100%" height="120" xmlns="http://www.w3.org/2000/svg" style="max-width: 440px;"><line x1="0" y1="120" x2="440" y2="120" stroke="#cbd5e1" stroke-width="1.5"/><rect x="2.0" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="0"><title>Bin 1: 0.0%</title></rect><rect x="31.3" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="1"><title>Bin 2: 0.0%</title></rect><rect x="60.7" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="2"><title>Bin 3: 0.0%</title></rect><rect x="90.0" y="120.0" width="25.3" height="0.0" fill="#ef4444" rx="2" class="bar" data-val="0.000" data-bin="3"><title>Bin 4: 0.0%</title></rect><rect x="119.3" y="83.4" width="25.3" height="36.6" fill="#ef4444" rx="2" class="bar" data-val="0.305" data-bin="4"><title>Bin 5: 30.5%</title></rect><rect x="148.7" y="116.5" width="25.3" height="3.5" fill="#ef4444" rx="2" class="bar" data-val="0.029" data-bin="5"><title>Bin 6: 2.9%</title></rect><rect x="178.0" y="113.1" width="25.3" height="6.9" fill="#ef4444" rx="2" class="bar" data-val="0.057" data-bin="6"><title>Bin 7: 5.7%</title></rect><rect x="207.3" y="119.2" width="25.3" height="0.8" fill="#ef4444" rx="2" class="bar" data-val="0.006" data-bin="7"><title>Bin 8: 0.6%</title></rect><rect x="236.7" y="119.5" width="25.3" height="0.5" fill="#ef4444" rx="2" class="bar" data-val="0.004" data-bin="8"><title>Bin 9: 0.4%</title></rect><rect x="266.0" y="83.6" width="25.3" height="36.4" fill="#ef4444" rx="2" class="bar" data-val="0.303" data-bin="9"><title>Bin 10: 30.3%</title></rect><rect x="295.3" y="105.4" width="25.3" height="14.6" fill="#ef4444" rx="2" class="bar" data-val="0.122" data-bin="10"><title>Bin 11: 12.2%</title></rect><rect x="324.7" y="107.9" width="25.3" height="12.1" fill="#ef4444" rx="2" class="bar" data-val="0.101" data-bin="11"><title>Bin 12: 10.1%</title></rect><rect x="354.0" y="94.5" width="25.3" height="25.5" fill="#ef4444" rx="2" class="bar" data-val="0.212" data-bin="12"><title>Bin 13: 21.2%</title></rect><rect x="383.3" y="100.0" width="25.3" height="20.0" fill="#ef4444" rx="2" class="bar" data-val="0.166" data-bin="13"><title>Bin 14: 16.6%</title></rect><rect x="412.7" y="116.1" width="25.3" height="3.9" fill="#ef4444" rx="2" class="bar" data-val="0.032" data-bin="14"><title>Bin 15: 3.2%</title></rect></svg>
+            </div>
+          </div>
+        </section>
+        
+        <section id="gallery-section">
+          <div class="gallery-header">
+            <h2>Visual Explanations (Grad-CAM Overlays)</h2>
+            <div class="gallery-controls">
+              <input type="text" id="gallery-search" placeholder="Search classes or captions..." />
+            </div>
+          </div>
+          <div class="filter-chips"><button class="chip active" data-filter="all">All Explanations</button><button class="chip chip-alert" data-filter="label_error">&#9888; Suspected Label Errors</button><button class="chip" data-filter="cluster_0">Cluster 0</button><button class="chip" data-filter="cluster_1">Cluster 1</button><button class="chip" data-filter="cluster_2">Cluster 2</button><button class="chip" data-filter="cluster_3">Cluster 3</button></div>
+          <div class="gallery" id="explanation-gallery"><figure class="gallery-card" data-cluster="0" data-label-error="true" data-caption="[label error candidate] true: sandal | pred: sneaker (100%)"><div class="card-img-wrapper"><img src="data:image/png;base64,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" alt="[Label Error Candidate] true: Sandal | pred: Sneaker (100%)"/></div><figcaption>[Label Error Candidate] true: Sandal | pred: Sneaker (100%)</figcaption></figure><figure class="gallery-card" data-cluster="0" data-label-error="true" data-caption="[label error candidate] true: ankle boot | pred: sneaker (99%)"><div class="card-img-wrapper"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAAF6UlEQVR4nG2WzW8bxxnGn5mdnf0id5dfkigpNiMkCtAEDoo2l6LosYXT5pCeemjPzSGH/lc9tCfHPRUpiqKoUySBfagcuKojK7EsUaIkksv9no9ilpSsBCYeDJ7l4bfvO4N5nyXA74AAxEcAtIx9aVqAbKRumKVXQHJDVXXlFkDCgBDMQbtBtPB9c028iVuuHuACDsCBOUcaAxQggGbgDbFt4N8zAU0VqARVsCSoBv0Od0m0AQZYALWQRDA/zQxiqejKhLC9KsQ8xFw1xCs0VdRSdOUTJzQ1skbLEkGRhIBsoNENxfBZGmMWYRphtoSuiC9l/uFWddHraouaMg1x2YGFrH0FjVcK6SzGNMa006zLrs1KLKkJ9/wo7h0dnyhYNmoL8jzuScKgr/ZEAJVzA9pBRKYdXHZx0cHlUtfVaU3doN0bBO/cuTVf9Da3b5+q7mf/m35+kOxBSM1WxBqowMyZNNCIzLq4WKrXrG5WmM1qxB37R3fedDzv4tsvHj989NQLfvjz3743uqU1xqcH8+F2paWsBSqgxOqg2jTpGNBlD+dL8aTGBMSCJgba6rff7r89Pj354Bfvj4LNe/fvheU3zw4Pnz46XrO3LAQXgx6TlpRK5LWBejyPmk1c1tjHxJ4JTGBEQajhlmkxfTJ98ezFnx7/+f1f3t35zc5h+Wz8n7/2yYDzkGBWczfvh462kkXCYMNG5aDiKB0ULnJbCGRAamTKbCq1bXvy9dn+w/35Inn8770Pf/3hpw8+tVvpVq9PkRckX4g0C0I5F9pVDAZbc5SuUeGhQA4DzZor10CpRT/+w8dFUdz96d37f7l/OjkrxkVylOgNaPuI2RYjls9cW3q0u9Z3BoxSyQ30JXcFTUEyorUGgePxL//+pe/7xWYxDIZ9t6+n+lc/+2AezCZ8sndZJMkiETO7Ymz9lhSS2RD2qnfTPgpcQ3WiAXz00e8X6WJvby9N0/H6OAxDpXQiktAN39h5c3dr991Y7S+ib8Tgv4vw1Nr+5I//YE3vNUflksrVN3rP4Cl3dHv08J+P3trdXfPWhC02OhvzeeJzrqEnB5OCFW7tVv1KkEQp0XU8yTUCMIbaRuVS4ejSRYWS6Fwjx7tv3FmPR+vr6/968CB/sn97NKJCnMwX1GLjy2mv222rdjEpeI/DQdzJMlbPy/Pt9V3q6WX7ta0KjlKb3g3xvR/82J/5D/f3N9PUiqJoY+OiqoSUQilzCEFwtFj0ytINeHaSWS7jvvT5fKuz2RpGWx3HVBpw8tb29o7jtpPNoB90d3uDqv/k84Ngba3i3G23L4XQgMWYpFSb0cZg24XWXeELKVCiTPXtoTvxWFqe17Njs6eRz3ZH66/bLFq4sMniSfL84HnFmNfvl1WVK1WUJWWMam3ZtpBSKgVCLELUXCMg+ThjPhv4FvHUdHbsyjlTXv9oOrv3ty92vIt3Ot5r1mvRMI55PDxjE8JqzjWl1LIY5xIglIJSTamQspNlcUTpLavo5fbIdjtrJyeVDFq9zddZiiAONoRWZ3n61YvnT8+/pmPizfxgHrhZwF3XDQIFaEIqKWspzYTTuqjrLWbpoRKXIouz6tv67LP2V7PWYT3go5+wQvk5j0pSUFeomvrOsdQyzdNUprh8RfBd21mXaAktzU1WrnVCnBROATfLFcsn2UmkHdfxeavlDJSHyF5oVyGGjrSqlRZa13pFNI8rql7XWNcYEjIkid+G7gFdTgaHlxlDijRwx9lCZ6okYoF6m+eBq4hPTJoKg9MCulZEEUhCNUXziIiQmCKEDmhOwxJhIf1EsLTQzEwND0kUuigcXXJUrKwG7MxylMlL0chq0m3pZRNHeJl383n7FOIU1SnEFLoZ0ingo/L4nIcclY2aGcled0LUFeiVatK3cuwF2in8DH4OL4e5lQ3UMx8EST9siMIykWgOvN8/X8XOK9fYQBO0F2ilaC2hQtlXlS6/MjhmYcQaIjXxaEaUzWqbmTfZqMkSd60Ic9JO0E4MNFhCzTwq8X9Aw00ooA4BpAAAAABJRU5ErkJggg==" alt="[Label Error Candidate] true: Ankle boot | pred: Sneaker (99%)"/></div><figcaption>[Label Error Candidate] true: Ankle boot | pred: Sneaker (99%)</figcaption></figure><figure class="gallery-card" data-cluster="0" data-label-error="false" data-caption="true: sandal | pred: sneaker (74%)"><div class="card-img-wrapper"><img src="data:image/png;base64,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" alt="true: Sandal | pred: Sneaker (74%)"/></div><figcaption>true: Sandal | pred: Sneaker (74%)</figcaption></figure><figure class="gallery-card" data-cluster="1" data-label-error="false" data-caption="true: shirt | pred: t-shirt/top (57%)"><div class="card-img-wrapper"><img src="data:image/png;base64,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" alt="true: Shirt | pred: T-shirt/top (57%)"/></div><figcaption>true: Shirt | pred: T-shirt/top (57%)</figcaption></figure><figure class="gallery-card" data-cluster="2" data-label-error="false" data-caption="true: coat | pred: pullover (64%)"><div class="card-img-wrapper"><img src="data:image/png;base64,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" alt="true: Coat | pred: Pullover (64%)"/></div><figcaption>true: Coat | pred: Pullover (64%)</figcaption></figure><figure class="gallery-card" data-cluster="3" data-label-error="false" data-caption="true: coat | pred: dress (30%)"><div class="card-img-wrapper"><img src="data:image/png;base64,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" alt="true: Coat | pred: Dress (30%)"/></div><figcaption>true: Coat | pred: Dress (30%)</figcaption></figure><figure class="gallery-card" data-cluster="0" data-label-error="false" data-caption="true: ankle boot | pred: sneaker (77%)"><div class="card-img-wrapper"><img src="data:image/png;base64,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" alt="true: Ankle boot | pred: Sneaker (77%)"/></div><figcaption>true: Ankle boot | pred: Sneaker (77%)</figcaption></figure><figure class="gallery-card" data-cluster="1" data-label-error="true" data-caption="[label error candidate] true: coat | pred: pullover (91%)"><div class="card-img-wrapper"><img src="data:image/png;base64,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" alt="[Label Error Candidate] true: Coat | pred: Pullover (91%)"/></div><figcaption>[Label Error Candidate] true: Coat | pred: Pullover (91%)</figcaption></figure></div>
+        </section>
+        
+
+<script>
+(function() {
+  const chips = document.querySelectorAll('.chip');
+  const cards = document.querySelectorAll('.gallery-card');
+  const searchInput = document.getElementById('gallery-search');
+  let currentFilter = 'all';
+
+  function applyFilter() {
+    const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    cards.forEach(card => {
+      const cardCluster = card.getAttribute('data-cluster');
+      const isLabelError = card.getAttribute('data-label-error') === 'true';
+      const caption = card.getAttribute('data-caption') || '';
+
+      let matchesFilter = false;
+      if (currentFilter === 'all') {
+        matchesFilter = true;
+      } else if (currentFilter === 'label_error') {
+        matchesFilter = isLabelError;
+      } else if (currentFilter.startsWith('cluster_')) {
+        const targetC = currentFilter.replace('cluster_', '');
+        matchesFilter = (cardCluster === targetC);
+      }
+
+      let matchesSearch = (!query || caption.includes(query));
+      card.style.display = (matchesFilter && matchesSearch) ? 'block' : 'none';
+    });
+  }
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentFilter = chip.getAttribute('data-filter');
+      applyFilter();
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener('input', applyFilter);
+  }
+
+  // Table row click-to-filter
+  document.querySelectorAll('tr[data-filter-cluster]').forEach(row => {
+    row.addEventListener('click', () => {
+      const c = row.getAttribute('data-filter-cluster');
+      const targetChip = document.querySelector(`.chip[data-filter="cluster_${c}"]`);
+      if (targetChip) {
+        targetChip.click();
+        const gallery = document.getElementById('gallery-section');
+        if (gallery) gallery.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

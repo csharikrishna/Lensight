@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dataset Exploratory Analysis (EDA)</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --primary: #2563eb;
+    --border: #e2e8f0;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background: var(--bg); color: var(--text); line-height: 1.5; }
+  header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 36px 44px; border-bottom: 1px solid #334155; }
+  .header-content { max-width: 1040px; margin: 0 auto; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 700; color: #60a5fa; background: rgba(96,165,250,0.15); padding: 4px 8px; border-radius: 4px; margin-bottom: 8px; }
+  header h1 { margin: 0; font-size: 26px; }
+  .timestamp { color: #94a3b8; font-size: 13px; margin: 6px 0 0; }
+  section { max-width: 1040px; margin: 24px auto; background: var(--card); padding: 26px 32px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  h2 { margin-top: 0; font-size: 19px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  .subtitle { font-size: 13.5px; color: var(--muted); margin-top: -4px; margin-bottom: 16px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .stat-card { background: #f8fafc; border: 1px solid var(--border); padding: 14px 18px; border-radius: 8px; }
+  .stat-value { display: block; font-size: 28px; font-weight: 800; color: var(--primary); }
+  .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; font-weight: 600; }
+  .alert { padding: 12px 16px; border-radius: 8px; font-size: 13.5px; margin-bottom: 10px; }
+  .alert-danger { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+  .alert-warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+  .alert-info { background: #f0f9ff; border: 1px solid #bae6fd; color: #0369a1; }
+  .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 12px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-size: 12px; text-transform: uppercase; background: #f8fafc; }
+  .split { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+  .outlier-card { margin: 0; background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .img-wrap { width: 100%; aspect-ratio: 1; background: #000; overflow: hidden; }
+  .outlier-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  figcaption { padding: 8px 10px; font-size: 12px; border-top: 1px solid var(--border); background: #f8fafc; }
+  @media (max-width: 768px) { .split { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-content">
+    <div class="badge">LENSIGHT DATASET PROFILER</div>
+    <h1>Dataset Exploratory Analysis (EDA)</h1>
+    <p class="timestamp">Generated on 2026-09-09 13:25 &bull; Plug-and-Play CV Exploratory Analysis</p>
+  </div>
+</header>
+
+<section>
+  <h2>Health Summary &amp; Alerts</h2>
+  <div class="stat-grid">
+    <div class="stat-card"><span class="stat-value">150</span><span class="stat-label">Total Samples</span></div>
+    <div class="stat-card"><span class="stat-value">1.9x</span><span class="stat-label">Imbalance Ratio</span></div>
+    <div class="stat-card"><span class="stat-value">0.2%</span><span class="stat-label">Mean Brightness</span></div>
+    <div class="stat-card"><span class="stat-value">1</span><span class="stat-label">Duplicate Pairs</span></div>
+  </div>
+  <div class="alert alert-danger"><strong>Duplicate Samples Detected:</strong> Found 1 duplicate image pairs. Verify train/val split isolation to avoid leakage.</div><div class="alert alert-info"><strong>Lighting Outliers:</strong> 150 underexposed (dark) and 0 overexposed images detected.</div><div class="alert alert-info"><strong>Low Sharpness:</strong> 7 images have low gradient energy (suspected motion blur or low focus).</div>
+</section>
+
+<section>
+  <h2>Class Distribution &amp; Balance</h2>
+  <div class="split">
+    <div>
+      <p class="subtitle">Sample counts per category:</p>
+      <table>
+        <thead><tr><th>Category</th><th>Samples</th><th>Frequency</th></tr></thead>
+        <tbody><tr><td><strong>Pullover</strong></td><td>21</td><td>14.0%</td></tr><tr><td><strong>Trouser</strong></td><td>20</td><td>13.3%</td></tr><tr><td><strong>Bag</strong></td><td>17</td><td>11.3%</td></tr><tr><td><strong>Sneaker</strong></td><td>15</td><td>10.0%</td></tr><tr><td><strong>T-shirt/top</strong></td><td>15</td><td>10.0%</td></tr><tr><td><strong>Sandal</strong></td><td>14</td><td>9.3%</td></tr><tr><td><strong>Shirt</strong></td><td>13</td><td>8.7%</td></tr><tr><td><strong>Coat</strong></td><td>13</td><td>8.7%</td></tr><tr><td><strong>Ankle boot</strong></td><td>11</td><td>7.3%</td></tr><tr><td><strong>Dress</strong></td><td>11</td><td>7.3%</td></tr></tbody>
+      </table>
+    </div>
+    <div>
+      <p class="subtitle">Category representation chart:</p>
+      <svg viewBox="0 0 500 150" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" style="max-width: 500px;"><line x1="0" y1="126" x2="500" y2="126" stroke="#cbd5e1" stroke-width="1.5"/><rect x="2.0" y="36.0" width="46.0" height="90.0" fill="#3b82f6" rx="2"><title>T-shirt/top: 15</title></rect><rect x="52.0" y="6.0" width="46.0" height="120.0" fill="#3b82f6" rx="2"><title>Trouser: 20</title></rect><rect x="102.0" y="0.0" width="46.0" height="126.0" fill="#3b82f6" rx="2"><title>Pullover: 21</title></rect><rect x="152.0" y="60.0" width="46.0" height="66.0" fill="#3b82f6" rx="2"><title>Dress: 11</title></rect><rect x="202.0" y="48.0" width="46.0" height="78.0" fill="#3b82f6" rx="2"><title>Coat: 13</title></rect><rect x="252.0" y="42.0" width="46.0" height="84.0" fill="#3b82f6" rx="2"><title>Sandal: 14</title></rect><rect x="302.0" y="48.0" width="46.0" height="78.0" fill="#3b82f6" rx="2"><title>Shirt: 13</title></rect><rect x="352.0" y="36.0" width="46.0" height="90.0" fill="#3b82f6" rx="2"><title>Sneaker: 15</title></rect><rect x="402.0" y="24.0" width="46.0" height="102.0" fill="#3b82f6" rx="2"><title>Bag: 17</title></rect><rect x="452.0" y="60.0" width="46.0" height="66.0" fill="#3b82f6" rx="2"><title>Ankle boot: 11</title></rect><text x="4" y="144" font-size="11" fill="#64748b">Classes &rarr;</text></svg>
+    </div>
+  </div>
+</section>
+
+
+        <section>
+          <h2>Flagged Visual Outliers</h2>
+          <p class="subtitle">Representative visual defects identified during data profiling:</p>
+          <div class="gallery"><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAAAaElEQVR4nO2SQQqAMAwEd4v///IKPZSgNUoMRSFzKD2kk5AuUBTFFyA5TnsB0LLskt5KSVrLgRaTTo1jAy0m9e3JsA8b36n97kUJy4Rdut3m4+qlV4BZ3bmHLfCHkMTng/idVmSr+AM7+bMeLHBTdWwAAAAASUVORK5CYII=" alt="Underexposed (Dark)"/></div><figcaption><strong>#0</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAAA5klEQVR4nLVV0Q7EIAizZP//yeOSmXGcsIrm1ien0lYG2toLAFsD4lhVbdKP56RwdFNEaombRJJJguhA4g5TxoUlgY5HUwDOC/Y5rD4FttRpOqM3TE9Vn6iFCFqMz4mqmv2q0xRTlsHyUS+U/t96Eiwnm8c/b5v+4J66SopfIwBEpDu1Okv7bXJ83wj2302JN8iRzg4UZIMvjK+V5uBPQVIWqRlpx0ZrDuzClwmItlSU/3mhtAJSeVkNqED2wl4kxVWk85u/nlCSHFkN2CwpdS3Ieb0224z1xy6GzN+oIi8j3avNIeoDHcWKQoAd7UkAAAAASUVORK5CYII=" alt="Underexposed (Dark)"/></div><figcaption><strong>#1</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAAApElEQVR4nM2V2w7EIAhEYbL//8nOPpB2k0a5KEl33qrlgAO2IpFUNbn425WIeMeTtBWSqjrGWEV9wkqNtXqcCmGlIaIMXckcaIb6gr+dcbAGVddQJx/2fPTzIYOz2cynR2PTU1CdxTcM/wOUNAFS1Onxp+o/vpxXyq3rJC/cfV6VVj+AeK1RVeGPoHRNwEnwJvRWaQCQf9XU1v1HmXv/7TiHz/0C9DZCM56EGEQAAAAASUVORK5CYII=" alt="Underexposed (Dark)"/></div><figcaption><strong>#2</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAAAb0lEQVR4nN2VwQ7AIAhDabP//2V29TCLYRjZ3lUtTTFgtgEEx3i+4O7iFZNeJsVeiWp4QNQn2elMkQhRKxb3J5kp1kQbOF2E1kEU5bHiS5ni1K9ildDIVSuXb1RYiY0mv+/YURraz3eUJnZ6ctqP3Iz1EksrtybBAAAAAElFTkSuQmCC" alt="Underexposed (Dark)"/></div><figcaption><strong>#3</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAAAk0lEQVR4nNVWWw7AIAijvf+dWTYTYzbwMSTZ+qWNlor4EEkAxiMAVS2Nli9kOD4wZNYQne8BF0z+xlDC2JPcoVlKTMhMCDNWzdei1ePmwoBTD+y7WAowEA2mlZIA/lxUJ05eZzMZ82SHZ1B09pbCYpE+zTKoeEqQO08qHC1ui5At+j3Aewr7c9quqpaPReWznjwTBziuIVwDxDufAAAAAElFTkSuQmCC" alt="Underexposed (Dark)"/></div><figcaption><strong>#4</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAAAj0lEQVR4nN2VUQ6AIAxDae9/5/lBYkiQsg0w0X4hureSNYgiBeBem1n7WHceq6ihowZaLAfEt6FwnzcATYt/gVqTxFEqw1B0afdMj36cw+IMuiJGC6plbZy6uF+fPb6NO3EjKw+9JbLFckD0fBS9rpjzottQvIsmyQX95tWHyKy45mkf1GYDnEN7RPovu6QL198wKs/QWagAAAAASUVORK5CYII=" alt="Underexposed (Dark)"/></div><figcaption><strong>#5</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAAAdUlEQVR4nO2VUQrAIAxDm7D7H9kOLAj76NRKBw7fh4g1sVVRkQTQCVdU1VobbB0Pvoe1AqCUYmuMZHp1Z1heza6b5gS2DzOKw+HJygViWJliCr8UBjS7lZ9lCmeLKAlQvgQDpz9XPtbeY3qBlW+DYeUvTPfhBtFuGzGgPwIfAAAAAElFTkSuQmCC" alt="Underexposed (Dark)"/></div><figcaption><strong>#6</strong>: Underexposed (Dark)</figcaption></figure><figure class="outlier-card"><div class="img-wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAIAAAD9b0jDAAAAgUlEQVR4nNWU7QrAIAhF7/X937lBo3Cjhva986vCDhoaMAFagkQkhJC3et0uBUDSaPSRvcfAeRlRqfOaERwBT0lk4Ps6YOlO75sw3jdaXMHW8ms6wTLoKX+wtIZg10SwR8rUInbLHbx7uKl+PJ3X69DnakbwY/gs/3tbZED5i/rpAhTYCYCWR2tGAAAAAElFTkSuQmCC" alt="Underexposed (Dark)"/></div><figcaption><strong>#7</strong>: Underexposed (Dark)</figcaption></figure></div>
+        </section>
+        
+
+</body>
+</html>

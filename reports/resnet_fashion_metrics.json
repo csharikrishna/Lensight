@@ -1,0 +1,404 @@
+{
+  "misclassification": {
+    "total_examples": 300,
+    "total_errors": 62,
+    "accuracy": 0.7933333333333333,
+    "error_rate": 0.20666666666666667,
+    "confusion_matrix": [
+      [
+        28,
+        0,
+        2,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        35,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        35,
+        3,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        22,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        12,
+        6,
+        12,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        22,
+        0,
+        5,
+        0,
+        0
+      ],
+      [
+        5,
+        1,
+        11,
+        3,
+        1,
+        0,
+        7,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        28,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        2,
+        0,
+        24,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        0,
+        25
+      ]
+    ],
+    "top_confused_pairs": [
+      {
+        "true": "Coat",
+        "pred": "Pullover",
+        "count": 12
+      },
+      {
+        "true": "Shirt",
+        "pred": "Pullover",
+        "count": 11
+      },
+      {
+        "true": "Coat",
+        "pred": "Dress",
+        "count": 6
+      },
+      {
+        "true": "Shirt",
+        "pred": "T-shirt/top",
+        "count": 5
+      },
+      {
+        "true": "Sandal",
+        "pred": "Sneaker",
+        "count": 5
+      }
+    ],
+    "n_clusters": 4,
+    "clusters": [
+      {
+        "cluster": 3,
+        "size": 19,
+        "dominant_true": 4,
+        "dominant_pred": 3,
+        "avg_confidence": 0.6332735246733615
+      },
+      {
+        "cluster": 1,
+        "size": 17,
+        "dominant_true": 6,
+        "dominant_pred": 2,
+        "avg_confidence": 0.6382685321218827
+      },
+      {
+        "cluster": 2,
+        "size": 17,
+        "dominant_true": 4,
+        "dominant_pred": 2,
+        "avg_confidence": 0.7343594624715692
+      },
+      {
+        "cluster": 0,
+        "size": 9,
+        "dominant_true": 5,
+        "dominant_pred": 7,
+        "avg_confidence": 0.7620942427052392
+      }
+    ],
+    "suspected_label_errors": [
+      {
+        "index": 21,
+        "true_label": "Sandal",
+        "pred_label": "Sneaker",
+        "confidence": 0.9960271120071411,
+        "cluster": 0
+      },
+      {
+        "index": 68,
+        "true_label": "Ankle boot",
+        "pred_label": "Sneaker",
+        "confidence": 0.9947319030761719,
+        "cluster": 0
+      },
+      {
+        "index": 147,
+        "true_label": "Shirt",
+        "pred_label": "Dress",
+        "confidence": 0.9708187580108643,
+        "cluster": 3
+      },
+      {
+        "index": 239,
+        "true_label": "Coat",
+        "pred_label": "Pullover",
+        "confidence": 0.9690941572189331,
+        "cluster": 2
+      },
+      {
+        "index": 244,
+        "true_label": "Shirt",
+        "pred_label": "Pullover",
+        "confidence": 0.9672563672065735,
+        "cluster": 2
+      },
+      {
+        "index": 50,
+        "true_label": "Coat",
+        "pred_label": "Pullover",
+        "confidence": 0.9536037445068359,
+        "cluster": 2
+      },
+      {
+        "index": 89,
+        "true_label": "Shirt",
+        "pred_label": "Pullover",
+        "confidence": 0.9485992193222046,
+        "cluster": 1
+      },
+      {
+        "index": 17,
+        "true_label": "Coat",
+        "pred_label": "Pullover",
+        "confidence": 0.9392094016075134,
+        "cluster": 2
+      },
+      {
+        "index": 293,
+        "true_label": "Shirt",
+        "pred_label": "T-shirt/top",
+        "confidence": 0.9213418960571289,
+        "cluster": 3
+      },
+      {
+        "index": 25,
+        "true_label": "Coat",
+        "pred_label": "Pullover",
+        "confidence": 0.9055861234664917,
+        "cluster": 1
+      },
+      {
+        "index": 247,
+        "true_label": "Coat",
+        "pred_label": "Pullover",
+        "confidence": 0.9031468629837036,
+        "cluster": 2
+      },
+      {
+        "index": 193,
+        "true_label": "Shirt",
+        "pred_label": "Pullover",
+        "confidence": 0.8850255012512207,
+        "cluster": 1
+      },
+      {
+        "index": 289,
+        "true_label": "Coat",
+        "pred_label": "Dress",
+        "confidence": 0.8805192112922668,
+        "cluster": 3
+      },
+      {
+        "index": 166,
+        "true_label": "Coat",
+        "pred_label": "Pullover",
+        "confidence": 0.8794634342193604,
+        "cluster": 2
+      },
+      {
+        "index": 127,
+        "true_label": "Coat",
+        "pred_label": "Pullover",
+        "confidence": 0.8663914203643799,
+        "cluster": 2
+      },
+      {
+        "index": 26,
+        "true_label": "Shirt",
+        "pred_label": "Pullover",
+        "confidence": 0.86258465051651,
+        "cluster": 2
+      },
+      {
+        "index": 141,
+        "true_label": "T-shirt/top",
+        "pred_label": "Pullover",
+        "confidence": 0.8422511219978333,
+        "cluster": 1
+      },
+      {
+        "index": 217,
+        "true_label": "Shirt",
+        "pred_label": "Pullover",
+        "confidence": 0.8369001746177673,
+        "cluster": 1
+      },
+      {
+        "index": 139,
+        "true_label": "Sandal",
+        "pred_label": "Sneaker",
+        "confidence": 0.8211466073989868,
+        "cluster": 0
+      },
+      {
+        "index": 91,
+        "true_label": "Dress",
+        "pred_label": "Trouser",
+        "confidence": 0.8162006735801697,
+        "cluster": 3
+      },
+      {
+        "index": 153,
+        "true_label": "Coat",
+        "pred_label": "Dress",
+        "confidence": 0.8012208938598633,
+        "cluster": 3
+      },
+      {
+        "index": 290,
+        "true_label": "Sandal",
+        "pred_label": "Sneaker",
+        "confidence": 0.8007067441940308,
+        "cluster": 0
+      }
+    ]
+  },
+  "calibration": {
+    "n_bins": 15,
+    "ece": 0.07503337134917576,
+    "mce": 0.30465155839920044,
+    "overall_accuracy": 0.7933333333333333,
+    "overall_confidence": 0.864398181438446,
+    "bin_confidence": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.30465155839920044,
+      0.36220911145210266,
+      0.44264286756515503,
+      0.49370384216308594,
+      0.5670820474624634,
+      0.63673335313797,
+      0.7049006819725037,
+      0.7678754925727844,
+      0.8314979076385498,
+      0.9055348038673401,
+      0.9869489669799805
+    ],
+    "bin_accuracy": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.3333333333333333,
+      0.5,
+      0.5,
+      0.5714285714285714,
+      0.3333333333333333,
+      0.5833333333333334,
+      0.6666666666666666,
+      0.6190476190476191,
+      0.7391304347826086,
+      0.9545454545454546
+    ],
+    "bin_counts": [
+      0,
+      0,
+      0,
+      0,
+      4,
+      3,
+      8,
+      12,
+      14,
+      12,
+      12,
+      15,
+      21,
+      23,
+      176
+    ],
+    "suggested_temperature": 1.4400665760040283,
+    "calibrated_ece": 0.05012114673852921
+  }
+}
