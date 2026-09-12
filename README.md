@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/logo.png" width="220" alt="Lensight Logo" style="border-radius: 16px; margin-bottom: 12px;" />
+<img src="docs/assets/logo.png" width="160" alt="Lensight Logo" style="margin-bottom: 12px;" />
 
 # 🔍 lensight
 

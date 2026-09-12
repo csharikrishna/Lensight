@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lensight — Unified PyTorch Computer Vision Diagnostics & Data Quality</title>
-  <meta name="description" content="The unified, lightweight diagnostic toolkit for PyTorch Computer Vision: dataset health, train/test leakage detection, confidence calibration (ECE), and Grad-CAM explainability in a single import." />
+  <meta name="description" content="The unified, lightweight diagnostic toolkit for PyTorch Computer Vision: pre-training dataset auditing, train/test leakage detection, confidence calibration (ECE), and Grad-CAM explainability in a single import." />
 
-  <!-- Google Fonts: Outfit & Inter -->
+  <!-- Google Fonts: Outfit, Inter, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -15,9 +15,9 @@
     :root {
       --primary: #2563eb;
       --primary-hover: #1d4ed8;
-      --primary-light: #eff6ff;
-      --accent: #0ea5e9;
-      --accent-purple: #6366f1;
+      --primary-subtle: #eff6ff;
+      --accent-cyan: #06b6d4;
+      --accent-indigo: #4f46e5;
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
@@ -28,15 +28,16 @@
       --text-muted: #64748b;
       --text-light: #94a3b8;
       --border: #e2e8f0;
-      --border-focus: #cbd5e1;
+      --border-light: #f1f5f9;
+      --border-dark: #cbd5e1;
       --card-bg: #ffffff;
-      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
-      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
-      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+      --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.06), 0 4px 6px -4px rgb(0 0 0 / 0.02);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.03);
       --radius-sm: 8px;
       --radius-md: 12px;
-      --radius-lg: 18px;
+      --radius-lg: 16px;
       --radius-full: 9999px;
       --font-heading: 'Outfit', -apple-system, sans-serif;
       --font-body: 'Inter', -apple-system, sans-serif;
@@ -57,25 +58,23 @@
       font-family: var(--font-body);
       background-color: var(--bg);
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.65;
       -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
     }
 
-    /* Top Navigation */
+    /* Navigation */
     header {
       position: sticky;
       top: 0;
-      z-index: 50;
-      background: rgba(255, 255, 255, 0.85);
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      transition: all 0.2s ease;
     }
 
     .nav-container {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
       padding: 14px 24px;
       display: flex;
@@ -92,10 +91,9 @@
     }
 
     .brand img {
-      width: 38px;
-      height: 38px;
-      border-radius: 9px;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
     }
 
     .brand-text {
@@ -103,7 +101,7 @@
       font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #06b6d4 100%);
+      background: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #06b6d4 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -111,7 +109,7 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 28px;
+      gap: 24px;
       list-style: none;
     }
 
@@ -119,7 +117,7 @@
       text-decoration: none;
       color: var(--text-muted);
       font-weight: 500;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       transition: color 0.15s ease;
     }
 
@@ -139,12 +137,12 @@
       justify-content: center;
       gap: 8px;
       font-family: var(--font-body);
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       font-weight: 600;
-      padding: 10px 18px;
+      padding: 9px 16px;
       border-radius: var(--radius-sm);
       text-decoration: none;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.2s ease;
       cursor: pointer;
       border: 1px solid transparent;
     }
@@ -152,30 +150,30 @@
     .btn-primary {
       background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
       color: white;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
     }
 
     .btn-primary:hover {
       background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
       transform: translateY(-1px);
     }
 
-    .btn-secondary {
+    .btn-outline {
       background: var(--bg);
       color: var(--text);
-      border-color: var(--border);
+      border-color: var(--border-dark);
     }
 
-    .btn-secondary:hover {
-      background: var(--bg-subtle);
-      border-color: var(--border-focus);
+    .btn-outline:hover {
+      background: var(--bg-alt);
+      border-color: var(--primary);
+      color: var(--primary);
     }
 
     /* Hero Section */
     .hero {
-      position: relative;
-      padding: 80px 24px 60px;
+      padding: 70px 24px 50px;
       max-width: 1200px;
       margin: 0 auto;
       text-align: center;
@@ -186,7 +184,7 @@
       align-items: center;
       gap: 8px;
       padding: 6px 14px;
-      background: var(--primary-light);
+      background: var(--primary-subtle);
       border: 1px solid rgba(37, 99, 235, 0.2);
       border-radius: var(--radius-full);
       font-size: 0.85rem;
@@ -200,12 +198,13 @@
       color: white;
       padding: 2px 7px;
       border-radius: var(--radius-full);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
+      font-weight: 700;
     }
 
     .hero h1 {
       font-family: var(--font-heading);
-      font-size: 3.5rem;
+      font-size: 3.4rem;
       font-weight: 800;
       line-height: 1.15;
       letter-spacing: -0.03em;
@@ -220,24 +219,24 @@
     }
 
     .hero-subtitle {
-      font-size: 1.25rem;
+      font-size: 1.22rem;
       color: var(--text-muted);
       max-width: 780px;
-      margin: 0 auto 36px;
+      margin: 0 auto 34px;
       font-weight: 400;
       line-height: 1.6;
     }
 
-    .hero-cta-group {
+    .hero-cta {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 16px;
       flex-wrap: wrap;
-      margin-bottom: 40px;
+      margin-bottom: 36px;
     }
 
-    /* Quick Install Box */
+    /* Install Command Box */
     .install-box {
       display: inline-flex;
       align-items: center;
@@ -248,7 +247,6 @@
       border-radius: var(--radius-sm);
       font-family: var(--font-mono);
       font-size: 0.92rem;
-      color: var(--text);
       box-shadow: var(--shadow-sm);
     }
 
@@ -273,49 +271,44 @@
       color: var(--primary);
     }
 
-    /* Trust / Proof Stats */
-    .proof-banner {
+    /* Hero Stat Banner */
+    .stat-banner {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      max-width: 1000px;
-      margin: 0 auto 80px;
-      padding: 24px;
+      gap: 16px;
+      max-width: 960px;
+      margin: 0 auto 60px;
+      padding: 22px;
       background: var(--bg-alt);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-sm);
     }
 
-    .proof-item {
+    .stat-item {
       text-align: center;
     }
 
-    .proof-item .number {
+    .stat-item .val {
       font-family: var(--font-heading);
-      font-size: 2rem;
+      font-size: 1.9rem;
       font-weight: 800;
       color: var(--primary);
-      margin-bottom: 4px;
+      line-height: 1.2;
     }
 
-    .proof-item .label {
-      font-size: 0.88rem;
+    .stat-item .lbl {
+      font-size: 0.85rem;
       color: var(--text-muted);
       font-weight: 500;
+      margin-top: 4px;
     }
 
-    /* Section Headers */
+    /* General Section Styling */
     .section {
-      padding: 80px 24px;
+      padding: 70px 24px;
       max-width: 1200px;
       margin: 0 auto;
-    }
-
-    .section-header {
-      text-align: center;
-      max-width: 760px;
-      margin: 0 auto 50px;
     }
 
     .section-tag {
@@ -325,40 +318,142 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--primary);
-      margin-bottom: 10px;
       display: block;
+      margin-bottom: 8px;
+      text-align: center;
     }
 
     .section-title {
       font-family: var(--font-heading);
-      font-size: 2.4rem;
+      font-size: 2.3rem;
       font-weight: 800;
       letter-spacing: -0.02em;
+      text-align: center;
       margin-bottom: 14px;
       color: var(--text);
     }
 
     .section-desc {
+      text-align: center;
       font-size: 1.1rem;
       color: var(--text-muted);
-      line-height: 1.6;
+      max-width: 720px;
+      margin: 0 auto 46px;
     }
 
-    /* Comparison Table (The Unfair Advantage) */
-    .table-container {
-      background: var(--card-bg);
+    /* Visual Interactive Attribution Explorer */
+    .xai-explorer {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      margin-bottom: 60px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .xai-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .xai-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 9px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .xai-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .xai-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+    }
+
+    .xai-display {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .xai-visual-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .xai-simulated-canvas {
+      width: 100%;
+      height: 240px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .xai-info h4 {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .xai-info p {
+      color: var(--text-muted);
+      font-size: 0.96rem;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .xai-formula {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--primary);
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+
+    /* Comparison Table */
+    .table-card {
+      background: var(--bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       overflow-x: auto;
       box-shadow: var(--shadow-md);
-      margin-bottom: 50px;
+      margin-bottom: 60px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 0.95rem;
+      font-size: 0.93rem;
     }
 
     th, td {
@@ -372,152 +467,143 @@
       font-weight: 700;
       color: var(--text);
       font-size: 0.92rem;
-      letter-spacing: 0.02em;
     }
 
-    th.highlight-col, td.highlight-col {
-      background: rgba(37, 99, 235, 0.03);
+    th.active-col, td.active-col {
+      background: rgba(37, 99, 235, 0.025);
       border-left: 2px solid var(--primary);
       border-right: 2px solid var(--primary);
     }
 
-    th.highlight-col {
+    th.active-col {
       color: var(--primary);
       font-size: 1rem;
     }
 
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    .badge-check {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+    .chk {
       color: var(--success);
       font-weight: 600;
-    }
-
-    .badge-cross {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      color: var(--danger);
-      font-weight: 500;
     }
 
-    /* 5 Pillars Cards */
+    .cross {
+      color: var(--danger);
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 5 Pillars Grid */
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 28px;
-      margin-bottom: 50px;
+      gap: 24px;
+      margin-bottom: 60px;
     }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      padding: 30px;
+      padding: 28px;
       box-shadow: var(--shadow-sm);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.2s ease;
       position: relative;
     }
 
     .card:hover {
-      border-color: rgba(37, 99, 235, 0.3);
+      border-color: var(--primary);
       box-shadow: var(--shadow-lg);
-      transform: translateY(-3px);
+      transform: translateY(-2px);
     }
 
     .card-icon {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       border-radius: var(--radius-sm);
-      background: var(--primary-light);
+      background: var(--primary-subtle);
       color: var(--primary);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
-      margin-bottom: 20px;
+      font-size: 1.35rem;
+      margin-bottom: 18px;
     }
 
     .card h3 {
       font-family: var(--font-heading);
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       color: var(--text);
     }
 
     .card p {
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       line-height: 1.6;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
-    .card-meta {
+    .card-footer-badge {
       font-family: var(--font-mono);
       font-size: 0.8rem;
       color: var(--primary);
       font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
     }
 
     /* Interactive Code Tour */
-    .tour-container {
+    .code-tour {
       background: #0f172a;
       border-radius: var(--radius-md);
       color: #f8fafc;
       overflow: hidden;
       box-shadow: var(--shadow-xl);
-      margin: 40px auto;
       border: 1px solid #334155;
+      margin-bottom: 60px;
     }
 
-    .tour-tabs {
+    .tour-nav {
       display: flex;
       background: #1e293b;
       border-bottom: 1px solid #334155;
       overflow-x: auto;
     }
 
-    .tour-tab {
-      padding: 14px 22px;
+    .tour-nav-btn {
+      padding: 14px 20px;
+      background: none;
+      border: none;
       font-family: var(--font-heading);
       font-size: 0.92rem;
       font-weight: 600;
       color: #94a3b8;
-      background: none;
-      border: none;
       cursor: pointer;
       transition: all 0.15s ease;
       white-space: nowrap;
       border-bottom: 2px solid transparent;
     }
 
-    .tour-tab:hover {
+    .tour-nav-btn:hover {
       color: #f8fafc;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.02);
     }
 
-    .tour-tab.active {
+    .tour-nav-btn.active {
       color: #38bdf8;
       background: #0f172a;
       border-bottom-color: #38bdf8;
     }
 
-    .tour-content {
+    .tour-pane {
       display: none;
       padding: 24px;
-      position: relative;
     }
 
-    .tour-content.active {
+    .tour-pane.active {
       display: block;
     }
 
@@ -528,129 +614,70 @@
       overflow-x: auto;
     }
 
-    code .kw { color: #f472b6; }
-    code .fn { color: #38bdf8; }
-    code .str { color: #a3e635; }
-    code .num { color: #fb923c; }
-    code .com { color: #64748b; font-style: italic; }
+    .kw { color: #f472b6; font-weight: 600; }
+    .fn { color: #38bdf8; }
+    .str { color: #a3e635; }
+    .num { color: #fb923c; }
+    .com { color: #64748b; font-style: italic; }
 
-    /* Interactive UI Preview Showcase */
-    .feature-showcase {
-      background: var(--bg-alt);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 40px;
-      margin: 50px auto;
+    /* Case Studies */
+    .case-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      align-items: center;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 60px;
     }
 
-    .feature-text h3 {
-      font-family: var(--font-heading);
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 16px;
-    }
-
-    .feature-bullets {
-      list-style: none;
-      margin-top: 20px;
-    }
-
-    .feature-bullets li {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      font-size: 0.98rem;
-      margin-bottom: 14px;
-      color: var(--text-muted);
-    }
-
-    .feature-bullets li svg {
-      flex-shrink: 0;
-      color: var(--primary);
-      margin-top: 3px;
-    }
-
-    .feature-preview-box {
-      background: #ffffff;
+    .case-card {
+      background: var(--bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       padding: 24px;
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--shadow-sm);
     }
 
-    .preview-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 14px;
-      margin-bottom: 18px;
+    .case-tag {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      background: var(--primary-subtle);
+      color: var(--primary);
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 12px;
     }
 
-    .preview-header .title {
+    .case-card h4 {
       font-family: var(--font-heading);
+      font-size: 1.18rem;
       font-weight: 700;
-      font-size: 1.05rem;
+      margin-bottom: 8px;
       color: var(--text);
     }
 
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: var(--radius-full);
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .status-success {
-      background: #ecfdf5;
-      color: #059669;
-    }
-
-    .preview-metric-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px dashed var(--border);
-      font-size: 0.9rem;
-    }
-
-    .preview-metric-row:last-child {
-      border-bottom: none;
-    }
-
-    .preview-metric-row .metric-label {
+    .case-card p {
       color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
     }
 
-    .preview-metric-row .metric-val {
-      font-family: var(--font-mono);
-      font-weight: 600;
-    }
-
-    /* FAQ Section */
+    /* FAQ */
     .faq-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 24px;
-      margin-top: 40px;
+      margin-bottom: 60px;
     }
 
-    .faq-card {
-      background: var(--card-bg);
+    .faq-item {
+      background: var(--bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       padding: 24px;
     }
 
-    .faq-card h4 {
+    .faq-item h4 {
       font-family: var(--font-heading);
       font-size: 1.15rem;
       font-weight: 700;
@@ -658,7 +685,7 @@
       color: var(--text);
     }
 
-    .faq-card p {
+    .faq-item p {
       color: var(--text-muted);
       font-size: 0.92rem;
       line-height: 1.6;
@@ -668,31 +695,43 @@
     footer {
       background: var(--bg-alt);
       border-top: 1px solid var(--border);
-      padding: 60px 24px 30px;
-      margin-top: 80px;
+      padding: 50px 24px 30px;
     }
 
-    .footer-container {
+    .footer-content {
       max-width: 1200px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 24px;
-      padding-bottom: 40px;
+      gap: 20px;
+      padding-bottom: 30px;
       border-bottom: 1px solid var(--border);
     }
 
-    .footer-brand p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-top: 6px;
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .footer-brand img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+    }
+
+    .footer-brand span {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
     }
 
     .footer-links {
       display: flex;
-      gap: 24px;
+      gap: 20px;
       list-style: none;
     }
 
@@ -707,20 +746,20 @@
       color: var(--primary);
     }
 
-    .footer-bottom {
+    .footer-note {
       max-width: 1200px;
-      margin: 24px auto 0;
+      margin: 20px auto 0;
       display: flex;
       justify-content: space-between;
       color: var(--text-light);
       font-size: 0.85rem;
     }
 
-    /* Responsive */
-    @media (max-width: 900px) {
+    @media (max-width: 960px) {
       .hero h1 { font-size: 2.5rem; }
-      .feature-showcase { grid-template-columns: 1fr; }
-      .proof-banner { grid-template-columns: repeat(2, 1fr); }
+      .stat-banner { grid-template-columns: repeat(2, 1fr); }
+      .xai-display { grid-template-columns: 1fr; }
+      .case-grid { grid-template-columns: 1fr; }
       .faq-grid { grid-template-columns: 1fr; }
       .nav-links { display: none; }
     }
@@ -728,7 +767,7 @@
 </head>
 <body>
 
-  <!-- Navigation Header -->
+  <!-- Top Sticky Navigation -->
   <header>
     <div class="nav-container">
       <a href="#" class="brand">
@@ -737,17 +776,18 @@
       </a>
       <ul class="nav-links">
         <li><a href="#why">Why Lensight?</a></li>
-        <li><a href="#features">Pillars</a></li>
-        <li><a href="#tour">Interactive Tour</a></li>
-        <li><a href="#benchmarks">Benchmarks</a></li>
+        <li><a href="#xai">XAI Explorer</a></li>
+        <li><a href="#pillars">5 Pillars</a></li>
+        <li><a href="#tour">Code Tour</a></li>
+        <li><a href="#cases">Case Studies</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
       <div class="nav-actions">
-        <a href="https://github.com/csharikrishna/Lensight" target="_blank" class="btn btn-secondary">
+        <a href="https://github.com/csharikrishna/Lensight" target="_blank" class="btn btn-outline">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           GitHub
         </a>
-        <a href="#quickstart" class="btn btn-primary">Get Started</a>
+        <a href="#tour" class="btn btn-primary">Quick Tour</a>
       </div>
     </div>
   </header>
@@ -756,103 +796,141 @@
   <section class="hero">
     <div class="hero-badge">
       <span class="pill">v0.2.0</span>
-      Unified PyTorch Computer Vision Diagnostics
+      Production-Ready PyTorch Computer Vision Diagnostics
     </div>
     <h1>
       See Through the <span class="gradient-text">Black Box</span> of Computer Vision.
     </h1>
     <p class="hero-subtitle">
-      Stop stitching together 5 fragmented libraries. Lensight unifies <strong>pre-training dataset auditing</strong>, <strong>train/test leakage detection</strong>, <strong>confidence calibration</strong>, and <strong>Grad-CAM explainability</strong> in a single featherweight import.
+      Stop stitching together 5 fragmented libraries. Lensight unifies <strong>pre-training dataset health</strong>, <strong>train/test leakage detection</strong>, <strong>confidence calibration (ECE)</strong>, and <strong>Grad-CAM explainability</strong> in a single, zero-bloat import.
     </p>
 
-    <div class="hero-cta-group" id="quickstart">
+    <div class="hero-cta">
       <div class="install-box">
-        <span>$</span>
-        <code id="install-cmd">pip install lensight</code>
-        <button class="copy-btn" onclick="copyInstall()" title="Copy to clipboard">
+        <span style="color:#94a3b8">$</span>
+        <code id="cmd-text">pip install lensight</code>
+        <button class="copy-btn" onclick="copySnippet()" title="Copy command">
           <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
         </button>
       </div>
       <a href="https://github.com/csharikrishna/Lensight" target="_blank" class="btn btn-primary">
-        Star on GitHub ⭐
+        View on GitHub ⭐
       </a>
     </div>
 
-    <!-- Proof Banner -->
-    <div class="proof-banner">
-      <div class="proof-item">
-        <div class="number">50x</div>
-        <div class="label">Faster Vectorized Hashing</div>
+    <!-- Stat Highlights -->
+    <div class="stat-banner">
+      <div class="stat-item">
+        <div class="val">50x</div>
+        <div class="lbl">Faster Vectorized Hashing</div>
       </div>
-      <div class="proof-item">
-        <div class="number">0 GB</div>
-        <div class="label">Disk Copy Storage Overhead</div>
+      <div class="stat-item">
+        <div class="val">0 GB</div>
+        <div class="lbl">Disk Storage Duplication</div>
       </div>
-      <div class="proof-item">
-        <div class="number">&lt; 80 KB</div>
-        <div class="label">Total Wheel Package Size</div>
+      <div class="stat-item">
+        <div class="val">&lt; 80 KB</div>
+        <div class="lbl">Featherweight Wheel Package</div>
       </div>
-      <div class="proof-item">
-        <div class="number">100%</div>
-        <div class="label">Top-1 Accuracy Invariant</div>
+      <div class="stat-item">
+        <div class="val">100%</div>
+        <div class="lbl">Top-1 Accuracy Invariance</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Visual Attribution Explorer -->
+  <section class="section" id="xai">
+    <div class="section-tag">Interactive Preview</div>
+    <h2 class="section-title">Visual Attribution In Action</h2>
+    <p class="section-desc">
+      Switch between explainers to see how Lensight interrogates model decisions and surfaces fine-grained discriminative features.
+    </p>
+
+    <div class="xai-explorer">
+      <div class="xai-controls">
+        <button class="xai-btn active" onclick="showXAI('gradcam')">Grad-CAM</button>
+        <button class="xai-btn" onclick="showXAI('hirescam')">HiResCAM (Pixel Precision)</button>
+        <button class="xai-btn" onclick="showXAI('contrastive')">Contrastive CAM ("Why A over B?")</button>
+        <button class="xai-btn" onclick="showXAI('smoothgrad')">SmoothGrad (Noise Reduction)</button>
+      </div>
+
+      <div class="xai-display">
+        <div class="xai-visual-card">
+          <div class="xai-simulated-canvas" id="canvas-bg" style="background: radial-gradient(circle, rgba(239,68,68,0.7) 15%, rgba(245,158,11,0.5) 45%, rgba(37,99,235,0.15) 80%);">
+            <div style="font-family:var(--font-mono);font-size:0.85rem;background:rgba(0,0,0,0.75);color:white;padding:6px 14px;border-radius:6px;" id="canvas-badge">
+              Grad-CAM Heatmap Overlay
+            </div>
+          </div>
+          <span style="font-size:0.85rem;color:var(--text-muted);">Real-world ResNet-18 clothing attribution overlay</span>
+        </div>
+
+        <div class="xai-info">
+          <span class="xai-formula" id="xai-formula">L_GradCAM = ReLU( Σ α_k * A^k )</span>
+          <h4 id="xai-title">Grad-CAM: Coarse Semantic Localization</h4>
+          <p id="xai-desc">
+            Global average pooling collapses spatial gradients into per-channel weights. Highlights the primary anatomical regions driving the network's top predicted class.
+          </p>
+          <div style="background:var(--bg);border:1px solid var(--border);padding:14px;border-radius:var(--radius-sm);font-size:0.88rem;">
+            <strong>Best For:</strong> High-level visual validation, sanity checking whether the model relies on background artifacts vs the real object.
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Why Lensight: The Fragmented Stack Problem -->
   <section class="section" id="why">
-    <div class="section-header">
-      <span class="section-tag">The Problem</span>
-      <h2 class="section-title">Why Replace the Fragmented CV Stack?</h2>
-      <p class="section-desc">
-        Computer vision practitioners waste hours debugging conflicting dependencies between disparate packages. Data health and model health are two halves of the same diagnostic loop.
-      </p>
-    </div>
+    <div class="section-tag">The Unfair Advantage</div>
+    <h2 class="section-title">Lensight vs. The Fragmented Stack</h2>
+    <p class="section-desc">
+      Why install 5 different unmaintained packages with 28 heavy dependencies when you can use one unified, cohesive tool?
+    </p>
 
-    <div class="table-container">
+    <div class="table-card">
       <table>
         <thead>
           <tr>
-            <th>Diagnostic Need</th>
+            <th>Diagnostic Capability</th>
             <th>Legacy Fragmented Stack</th>
-            <th class="highlight-col">✨ Lensight Unified Platform</th>
+            <th class="active-col">✨ Lensight Unified Approach</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>Visual Attribution</strong></td>
-            <td><code>pytorch-grad-cam</code>, <code>captum</code> (single image loops, heavy)</td>
-            <td class="highlight-col"><span class="badge-check">✓</span> <code>GradCAM</code>, <code>HiResCAM</code>, <code>ContrastiveCAM</code> (vectorized batching)</td>
+            <td><strong>Visual Attribution (CAM)</strong></td>
+            <td><code>pytorch-grad-cam</code> (slow loops, heavy)</td>
+            <td class="active-col"><span class="chk">✓</span> <code>GradCAM</code>, <code>HiResCAM</code>, <code>ContrastiveCAM</code> (vectorized batching)</td>
           </tr>
           <tr>
-            <td><strong>Dataset Auditing</strong></td>
+            <td><strong>Dataset Duplicate Auditing</strong></td>
             <td><code>imgcheck</code> (slow nested loops, arbitrary deletion)</td>
-            <td class="highlight-col"><span class="badge-check">✓</span> <code>DatasetAuditor</code> (50x faster NumPy XOR popcount, Smart Survivor)</td>
+            <td class="active-col"><span class="chk">✓</span> <code>DatasetAuditor</code> (50x faster NumPy XOR popcount, Smart Survivor)</td>
           </tr>
           <tr>
-            <td><strong>Train/Test Leakage</strong></td>
-            <td>Manual ad-hoc scripts</td>
-            <td class="highlight-col"><span class="badge-check">✓</span> <code>check_leakage()</code> with per-class leakage percentages</td>
+            <td><strong>Train/Test Leakage Detection</strong></td>
+            <td>Ad-hoc custom scripts</td>
+            <td class="active-col"><span class="chk">✓</span> <code>check_leakage()</code> with per-class leakage percentages</td>
           </tr>
           <tr>
             <td><strong>Data Sanitization</strong></td>
-            <td>Copies entire dataset on disk (doubling SSD storage)</td>
-            <td class="highlight-col"><span class="badge-check">✓</span> <code>DatasetSanitizer.clean_subset()</code> (zero-disk in-memory <code>Subset</code>)</td>
+            <td>Duplicates entire dataset on disk (+100 GB)</td>
+            <td class="active-col"><span class="chk">✓</span> <code>DatasetSanitizer.clean_subset()</code> (zero-disk in-memory <code>Subset</code>)</td>
           </tr>
           <tr>
             <td><strong>Confidence Calibration</strong></td>
-            <td><code>netcal</code> (complex configuration, heavy dependencies)</td>
-            <td class="highlight-col"><span class="badge-check">✓</span> <code>TemperatureScaler</code> (1-line L-BFGS, invariant top-1 accuracy)</td>
+            <td><code>netcal</code> (complex setup, heavy dependencies)</td>
+            <td class="active-col"><span class="chk">✓</span> <code>TemperatureScaler</code> (1-line L-BFGS, invariant top-1 accuracy)</td>
           </tr>
           <tr>
             <td><strong>Failure Clustering</strong></td>
-            <td>Manual pandas & matplotlib code</td>
-            <td class="highlight-col"><span class="badge-check">✓</span> <code>ErrorProfiler</code> (clusters failure embeddings with PCA/k-Means)</td>
+            <td>Custom pandas & matplotlib boilerplate</td>
+            <td class="active-col"><span class="chk">✓</span> <code>ErrorProfiler</code> (clusters failure embeddings with PCA/k-Means)</td>
           </tr>
           <tr>
-            <td><strong>Dependencies</strong></td>
+            <td><strong>Total Dependency Footprint</strong></td>
             <td>OpenCV, Pandas, SciPy, PyWavelets, fpdf2 (>150 MB)</td>
-            <td class="highlight-col"><span class="badge-check">✓</span> <strong>Pure PyTorch, NumPy, Pillow, Scikit-Learn (&lt; 80 KB)</strong></td>
+            <td class="active-col"><span class="chk">✓</span> <strong>Pure PyTorch, NumPy, Pillow, Scikit-Learn (&lt; 80 KB)</strong></td>
           </tr>
         </tbody>
       </table>
@@ -860,159 +938,137 @@
   </section>
 
   <!-- 5 Core Pillars -->
-  <section class="section" id="features">
-    <div class="section-header">
-      <span class="section-tag">Capabilities</span>
-      <h2 class="section-title">The 5 Diagnostic Pillars</h2>
-      <p class="section-desc">
-        Complete end-to-end coverage across the entire vision model lifecycle.
-      </p>
-    </div>
+  <section class="section" id="pillars">
+    <div class="section-tag">Architecture</div>
+    <h2 class="section-title">The 5 Core Pillars</h2>
+    <p class="section-desc">
+      Designed to cover the entire Computer Vision Quality Assurance loop from raw images to production inference.
+    </p>
 
     <div class="grid-3">
-      <!-- Card 1 -->
       <div class="card">
         <div class="card-icon">🔍</div>
         <h3>Pre-Training Data Audit</h3>
         <p>
-          Detect train/test data leakage, near-duplicate clusters, and cross-label contradictions before wasting GPU hours on dirty data.
+          Catch train/test split leakage, duplicate clusters, and contradictory labels before wasting GPU hours training on corrupted data.
         </p>
-        <div class="card-meta">
-          <span>Vectorized NumPy • dHash / pHash</span>
-        </div>
+        <span class="card-footer-badge">Vectorized dHash / pHash</span>
       </div>
 
-      <!-- Card 2 -->
       <div class="card">
-        <div class="card-icon">🧠</div>
+        <div class="card-icon">💎</div>
         <h3>Smart Survivor Selection</h3>
         <p>
-          Legacy tools delete duplicates alphabetically. Lensight computes 2D Laplacian sharpness variance to automatically preserve the highest-resolution master.
+          Legacy tools delete duplicates alphabetically. Lensight evaluates 2D Laplacian sharpness variance to automatically preserve the highest-fidelity original.
         </p>
-        <div class="card-meta">
-          <span>Objective Focus Metric Q(x)</span>
-        </div>
+        <span class="card-footer-badge">Quality Score Q(x) = Var(∇²I) * Res</span>
       </div>
 
-      <!-- Card 3 -->
       <div class="card">
-        <div class="card-icon">💾</div>
+        <div class="card-icon">⚡</div>
         <h3>Zero-Disk Sanitization</h3>
         <p>
-          Create in-memory <code>torch.utils.data.Subset</code> instances ready for training without copying gigabytes of duplicate files onto your hard drive.
+          Creates an in-memory <code>torch.utils.data.Subset</code> that filters out corrupt, leaked, and duplicate indices with zero disk writes.
         </p>
-        <div class="card-meta">
-          <span>0 GB Storage Duplication</span>
-        </div>
+        <span class="card-footer-badge">0 GB Storage Overhead</span>
       </div>
 
-      <!-- Card 4 -->
       <div class="card">
         <div class="card-icon">🎯</div>
         <h3>Explainability (XAI)</h3>
         <p>
-          Explain predictions with Grad-CAM, HiResCAM, Contrastive CAM ("Why Coat instead of Pullover?"), and Integrated Gradients with vectorized GPU batching.
+          Explain CNN and Vision Transformer predictions. Use Contrastive CAM to answer *"Why did the model predict Coat instead of Pullover?"*
         </p>
-        <div class="card-meta">
-          <span>CNN & Vision Transformer Native</span>
-        </div>
+        <span class="card-footer-badge">Batch GPU Accelerated</span>
       </div>
 
-      <!-- Card 5 -->
       <div class="card">
-        <div class="card-icon">📐</div>
+        <div class="card-icon">⚖️</div>
         <h3>Confidence Calibration</h3>
         <p>
-          Measure Expected Calibration Error (ECE) and remediate overconfident models via 1-line Temperature Scaling with guaranteed top-1 accuracy preservation.
+          Fix overconfident models without retraining. Optimizes scalar temperature T on validation logits while preserving 100% top-1 accuracy.
         </p>
-        <div class="card-meta">
-          <span>L-BFGS NLL Optimization</span>
-        </div>
+        <span class="card-footer-badge">L-BFGS NLL Optimization</span>
       </div>
 
-      <!-- Card 6 -->
       <div class="card">
         <div class="card-icon">🩺</div>
         <h3>One-Shot ModelDoctor</h3>
         <p>
-          Profile thousands of validation images in one line. Clusters failure modes, surfaces label errors, and exports self-contained interactive HTML dashboards.
+          Profiles thousands of images in one call. Groups errors into semantic clusters, flags label errors, and exports self-contained HTML dashboards.
         </p>
-        <div class="card-meta">
-          <span>Interactive Dark-Mode HTML + JSON</span>
-        </div>
+        <span class="card-footer-badge">Interactive HTML + CI/CD JSON</span>
       </div>
     </div>
   </section>
 
   <!-- Interactive Code Tour -->
   <section class="section" id="tour">
-    <div class="section-header">
-      <span class="section-tag">Hands-On Code</span>
-      <h2 class="section-title">Interactive Workflow Tour</h2>
-      <p class="section-desc">
-        Click through the tabs below to explore how clean and intuitive Lensight code is.
-      </p>
-    </div>
+    <div class="section-tag">Quickstart</div>
+    <h2 class="section-title">Developer Code Tour</h2>
+    <p class="section-desc">
+      Explore the clean, intuitive Python API designed for computer vision engineers.
+    </p>
 
-    <div class="tour-container">
-      <div class="tour-tabs">
-        <button class="tour-tab active" onclick="switchTour('tab-audit')">1. Data Quality & Leakage</button>
-        <button class="tour-tab" onclick="switchTour('tab-xai')">2. Visual Attribution (CAM)</button>
-        <button class="tour-tab" onclick="switchTour('tab-calib')">3. Confidence Calibration</button>
-        <button class="tour-tab" onclick="switchTour('tab-doctor')">4. One-Shot ModelDoctor</button>
-        <button class="tour-tab" onclick="switchTour('tab-cli')">5. Terminal CLI</button>
+    <div class="code-tour">
+      <div class="tour-nav">
+        <button class="tour-nav-btn active" onclick="setTour('pane-audit')">1. Data Health & Leakage</button>
+        <button class="tour-nav-btn" onclick="setTour('pane-xai')">2. Visual Attribution (CAM)</button>
+        <button class="tour-nav-btn" onclick="setTour('pane-calib')">3. Calibration Remediation</button>
+        <button class="tour-nav-btn" onclick="setTour('pane-doctor')">4. One-Shot ModelDoctor</button>
+        <button class="tour-nav-btn" onclick="setTour('pane-cli')">5. Terminal CLI</button>
       </div>
 
-      <!-- Tab 1: Audit -->
-      <div id="tab-audit" class="tour-content active">
+      <!-- Pane 1 -->
+      <div id="pane-audit" class="tour-pane active">
 <pre><code><span class="kw">from</span> lensight.eda <span class="kw">import</span> DatasetAuditor, check_leakage, DatasetSanitizer
 
-<span class="com"># 1. Audit training set for duplicate clusters and contradictory labels</span>
+<span class="com"># 1. Audit training dataset for duplicate clusters and conflicting labels</span>
 auditor = <span class="fn">DatasetAuditor</span>(class_names=[<span class="str">"cat"</span>, <span class="str">"dog"</span>, <span class="str">"fox"</span>])
 audit_report = auditor.<span class="fn">audit</span>(train_loader, threshold=<span class="num">0</span>)
 <span class="fn">print</span>(audit_report.<span class="fn">summary_text</span>())
 audit_report.<span class="fn">save_html</span>(<span class="str">"reports/audit_report.html"</span>)
 
-<span class="com"># 2. Audit train/test leakage (did test samples leak into train?)</span>
+<span class="com"># 2. Check for train/test data leakage</span>
 leakage = <span class="fn">check_leakage</span>(train_loader, val_loader, threshold=<span class="num">0</span>)
-<span class="fn">print</span>(<span class="str">f"Leaked samples: {leakage.leaked_count} ({leakage.leakage_rate:.1%})"</span>)
+<span class="fn">print</span>(<span class="str">f"Leaked validation samples: {leakage.leaked_count} ({leakage.leakage_rate:.1%})"</span>)
 
 <span class="com"># 3. Non-destructive in-memory sanitization (zero disk copy!)</span>
 clean_train_subset = DatasetSanitizer.<span class="fn">clean_subset</span>(train_dataset, audit_report)
 <span class="com"># Ready for training with zero disk files touched!</span></code></pre>
       </div>
 
-      <!-- Tab 2: XAI -->
-      <div id="tab-xai" class="tour-content">
+      <!-- Pane 2 -->
+      <div id="pane-xai" class="tour-pane">
 <pre><code><span class="kw">from</span> lensight <span class="kw">import</span> GradCAM, HiResCAM, ContrastiveCAM
 <span class="kw">from</span> lensight.utils.image_utils <span class="kw">import</span> denormalize, overlay_heatmap
 <span class="kw">from</span> PIL <span class="kw">import</span> Image
 
-<span class="com"># 1. Standard Grad-CAM (auto-detects final convolutional layer)</span>
+<span class="com"># 1. Standard Grad-CAM (auto-detects target layer)</span>
 cam = <span class="fn">GradCAM</span>(model)
-heatmap = cam.<span class="fn">explain</span>(image_tensor)  <span class="com"># Explains top prediction</span>
+heatmap = cam.<span class="fn">explain</span>(image_tensor)  <span class="com"># Explains argmax prediction</span>
 rgb = <span class="fn">denormalize</span>(image_tensor)
 overlay = <span class="fn">overlay_heatmap</span>(rgb, heatmap)
-Image.<span class="fn">fromarray</span>(overlay).<span class="fn">save</span>(<span class="str">"gradcam_overlay.png"</span>)
+Image.<span class="fn">fromarray</span>(overlay).<span class="fn">save</span>(<span class="str">"reports/gradcam.png"</span>)
 
-<span class="com"># 2. Contrastive CAM ("Why Coat instead of Pullover?")</span>
+<span class="com"># 2. Contrastive CAM ("Why target class A instead of competitor B?")</span>
 contrast = <span class="fn">ContrastiveCAM</span>(model)
 contrast_map = contrast.<span class="fn">explain</span>(image_tensor, target_class=coat_idx, contrast_class=pullover_idx)
 
-<span class="com"># 3. High-throughput vectorized batch execution (6x faster)</span>
+<span class="com"># 3. High-throughput vectorized GPU batch execution (6x faster)</span>
 heatmaps = cam.<span class="fn">explain_batch</span>(batch_tensor)</code></pre>
       </div>
 
-      <!-- Tab 3: Calibration -->
-      <div id="tab-calib" class="tour-content">
+      <!-- Pane 3 -->
+      <div id="pane-calib" class="tour-pane">
 <pre><code><span class="kw">from</span> lensight <span class="kw">import</span> TemperatureScaler, ExpectedCalibrationError
 
 <span class="com"># 1. Compute Expected Calibration Error (ECE)</span>
 ece_metric = <span class="fn">ExpectedCalibrationError</span>(n_bins=<span class="num">10</span>)
 raw_ece = ece_metric.<span class="fn">compute</span>(val_probs, val_labels)
-<span class="fn">print</span>(<span class="str">f"Raw Model ECE: {raw_ece:.2%}"</span>)  <span class="com"># e.g., 10.15% (overconfident)</span>
+<span class="fn">print</span>(<span class="str">f"Raw Model ECE: {raw_ece:.2%}"</span>)  <span class="com"># e.g. 10.15% (overconfident)</span>
 
-<span class="com"># 2. Calibrate in 1 line via Temperature Scaling</span>
+<span class="com"># 2. Calibrate model confidence in 1 line via Temperature Scaling</span>
 scaler = <span class="fn">TemperatureScaler</span>(model)
 summary = scaler.<span class="fn">fit</span>(val_loader)
 <span class="fn">print</span>(summary.<span class="fn">summary_text</span>())
@@ -1023,8 +1079,8 @@ calibrated_model = scaler.calibrated_model
 <span class="com"># Top-1 accuracy is 100% invariant, while probabilities are well-calibrated!</span></code></pre>
       </div>
 
-      <!-- Tab 4: Doctor -->
-      <div id="tab-doctor" class="tour-content">
+      <!-- Pane 4 -->
+      <div id="pane-doctor" class="tour-pane">
 <pre><code><span class="kw">from</span> lensight <span class="kw">import</span> ModelDoctor
 
 <span class="com"># 1. Initialize Doctor with class names</span>
@@ -1038,7 +1094,7 @@ report = doctor.<span class="fn">diagnose</span>(
     report_title=<span class="str">"Production ResNet-18 Health Report"</span>
 )
 
-<span class="com"># 3. Summary and interactive self-contained HTML report</span>
+<span class="com"># 3. Review summary and save interactive HTML dashboard</span>
 <span class="fn">print</span>(report.<span class="fn">summary_text</span>())
 report.<span class="fn">save_html</span>(<span class="str">"reports/diagnosis.html"</span>)
 
@@ -1047,9 +1103,9 @@ dirty_labels = report.misclassification.<span class="fn">find_label_errors</span
 <span class="fn">print</span>(<span class="str">f"Suspected mislabeled dataset images: {len(dirty_labels)}"</span>)</code></pre>
       </div>
 
-      <!-- Tab 5: CLI -->
-      <div id="tab-cli" class="tour-content">
-<pre><code><span class="com"># 1. Audit dataset directory for duplicates, blur, and class imbalance:</span>
+      <!-- Pane 5 -->
+      <div id="pane-cli" class="tour-pane">
+<pre><code><span class="com"># 1. Audit image dataset folder for duplicates, blur, and class imbalance:</span>
 $ lensight audit --dataset data/train_images --report reports/audit.html
 
 <span class="com"># 2. Detect train/test data leakage between split folders:</span>
@@ -1065,91 +1121,70 @@ $ python -c "import lensight; lensight.help()"</code></pre>
     </div>
   </section>
 
-  <!-- Live Showcase: ModelDoctor Report Simulation -->
-  <section class="section">
-    <div class="feature-showcase">
-      <div class="feature-text">
-        <span class="section-tag">Interactive HTML Dashboards</span>
-        <h3>Zero-Dependency Visual Dashboards</h3>
+  <!-- Case Studies -->
+  <section class="section" id="cases">
+    <div class="section-tag">Production Playbooks</div>
+    <h2 class="section-title">Proven In Real-World Scenarios</h2>
+    <p class="section-desc">
+      How teams leverage Lensight across diverse domains.
+    </p>
+
+    <div class="case-grid">
+      <div class="case-card">
+        <span class="case-tag">Medical Imaging</span>
+        <h4>Patient Cohort Leakage</h4>
         <p>
-          Every audit and diagnostic report produces a self-contained, offline-ready HTML dashboard. No React build step, no CDN dependencies, and no servers required.
+          Detect identical chest X-ray scans appearing in both train and validation splits due to anonymized re-scans, preventing artificially inflated clinical scores.
         </p>
-        <ul class="feature-bullets">
-          <li>
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-            <strong>Clickable Failure Clusters</strong>: Group misclassifications semantically using penultimate embeddings.
-          </li>
-          <li>
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-            <strong>Interactive Filter Chips</strong>: Filter by class, confidence threshold, or suspected label error in real time.
-          </li>
-          <li>
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-            <strong>Notebook Native</strong>: Embeds directly inside Jupyter and Google Colab with <code>_repr_html_()</code>.
-          </li>
-        </ul>
       </div>
 
-      <div class="feature-preview-box">
-        <div class="preview-header">
-          <span class="title">ResNet-18 Diagnostic Audit</span>
-          <span class="status-badge status-success">Quality Gate Passed</span>
-        </div>
-        <div class="preview-metric-row">
-          <span class="metric-label">Validation Accuracy</span>
-          <span class="metric-val" style="color:#059669">70.80% (354/500)</span>
-        </div>
-        <div class="preview-metric-row">
-          <span class="metric-label">Initial Calibration (ECE)</span>
-          <span class="metric-val" style="color:#ef4444">10.15% (Overconfident)</span>
-        </div>
-        <div class="preview-metric-row">
-          <span class="metric-label">Calibrated ECE (T=1.42)</span>
-          <span class="metric-val" style="color:#059669">5.89% (-42% error)</span>
-        </div>
-        <div class="preview-metric-row">
-          <span class="metric-label">Discovered Failure Clusters</span>
-          <span class="metric-val">4 Semantic Modes</span>
-        </div>
-        <div class="preview-metric-row">
-          <span class="metric-label">Suspected Annotation Errors</span>
-          <span class="metric-val" style="color:#f59e0b">42 Samples flagged</span>
-        </div>
+      <div class="case-card">
+        <span class="case-tag">E-Commerce</span>
+        <h4>Garment Subcategory Ambiguity</h4>
+        <p>
+          Identified 42 contaminated product tags in Fashion-MNIST where Pullover and Coat were mislabeled by annotators, improving downstream retrieval accuracy.
+        </p>
+      </div>
+
+      <div class="case-card">
+        <span class="case-tag">Autonomous Driving</span>
+        <h4>Spurious Background Artifacts</h4>
+        <p>
+          HiResCAM revealed that false positive pedestrian detections were triggered by road paint textures rather than actual human silhouettes, guiding targeted augmentation.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- FAQ Section -->
+  <!-- FAQ -->
   <section class="section" id="faq">
-    <div class="section-header">
-      <span class="section-tag">Questions & Answers</span>
-      <h2 class="section-title">Frequently Asked Questions</h2>
-    </div>
+    <div class="section-tag">FAQ</div>
+    <h2 class="section-title">Frequently Asked Questions</h2>
 
     <div class="faq-grid">
-      <div class="faq-card">
-        <h4>Does Lensight require OpenCV or Pandas?</h4>
+      <div class="faq-item">
+        <h4>Does Lensight force OpenCV or Pandas?</h4>
         <p>
           No! Lensight runs strictly on <strong>PyTorch, NumPy, Pillow, and Scikit-Learn</strong>. All perceptual hashing, blur variance kernels, and interactive dashboards use pure NumPy and Pillow. The entire wheel package is under 80 KB.
         </p>
       </div>
 
-      <div class="faq-card">
-        <h4>Does Temperature Scaling hurt model accuracy?</h4>
+      <div class="faq-item">
+        <h4>Does Temperature Scaling reduce accuracy?</h4>
         <p>
-          Never. Temperature scaling rescales logits by a single scalar $T > 0$. Because scaling is strictly monotonic, $\arg\max_k (z_k / T) = \arg\max_k z_k$. Your top-1 classification predictions and accuracy remain <strong>100% mathematically invariant</strong>.
+          Never. Temperature scaling rescales logits by scalar $T > 0$. Because scaling is strictly monotonic, $\arg\max_k (z_k / T) = \arg\max_k z_k$. Your top-1 classification predictions and accuracy remain <strong>100% mathematically invariant</strong>.
         </p>
       </div>
 
-      <div class="faq-card">
-        <h4>How is duplicate clustering 50x faster than legacy tools?</h4>
+      <div class="faq-item">
+        <h4>How is duplicate clustering 50x faster?</h4>
         <p>
           Legacy tools use nested Python loops comparing pairs one-by-one. Lensight bit-unpacks 64-bit perceptual hashes into NumPy arrays and uses a 256-element bitwise XOR popcount lookup table running in C/SIMD vector registers.
         </p>
       </div>
 
-      <div class="faq-card">
-        <h4>Does it work with Vision Transformers (ViT)?</h4>
+      <div class="faq-item">
+        <h4>Does it support Vision Transformers (ViT)?</h4>
         <p>
           Yes. Lensight includes <code>create_vit_reshape_transform()</code>, which reshapes 1D patch tokens into 2D spatial feature maps, enabling Grad-CAM, HiResCAM, and Score-CAM on ViT, DeiT, and DINO models seamlessly.
         </p>
@@ -1159,15 +1194,11 @@ $ python -c "import lensight; lensight.help()"</code></pre>
 
   <!-- Footer -->
   <footer>
-    <div class="footer-container">
+    <div class="footer-content">
       <div class="footer-brand">
-        <a href="#" class="brand">
-          <img src="assets/logo.png" alt="Lensight Logo" onerror="this.src='docs/assets/logo.png'" />
-          <span class="brand-text">Lensight</span>
-        </a>
-        <p>Unified PyTorch Computer Vision Diagnostics & Data Quality Toolkit.</p>
+        <img src="assets/logo.png" alt="Lensight Logo" onerror="this.src='docs/assets/logo.png'" />
+        <span>Lensight</span>
       </div>
-
       <ul class="footer-links">
         <li><a href="https://github.com/csharikrishna/Lensight" target="_blank">GitHub</a></li>
         <li><a href="https://pypi.org/project/lensight/" target="_blank">PyPI</a></li>
@@ -1177,16 +1208,15 @@ $ python -c "import lensight; lensight.help()"</code></pre>
         <li><a href="docs/API.md">API Reference</a></li>
       </ul>
     </div>
-
-    <div class="footer-bottom">
-      <span>Released under the MIT License. Open Source Community.</span>
-      <span>Built for PyTorch 2.0+ & Python 3.9–3.12</span>
+    <div class="footer-note">
+      <span>Released under the MIT License • Built for PyTorch 2.0+ & Python 3.9–3.12</span>
+      <span>Lightweight • Zero-Bloat • Production-Grade</span>
     </div>
   </footer>
 
   <script>
-    function copyInstall() {
-      const text = document.getElementById('install-cmd').innerText;
+    function copySnippet() {
+      const text = document.getElementById('cmd-text').innerText;
       navigator.clipboard.writeText(text).then(() => {
         const btn = document.querySelector('.copy-btn');
         btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="#10b981" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
@@ -1196,12 +1226,55 @@ $ python -c "import lensight; lensight.help()"</code></pre>
       });
     }
 
-    function switchTour(tabId) {
-      document.querySelectorAll('.tour-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tour-content').forEach(c => c.classList.remove('active'));
+    function setTour(paneId) {
+      document.querySelectorAll('.tour-nav-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tour-pane').forEach(p => p.classList.remove('active'));
 
       event.target.classList.add('active');
-      document.getElementById(tabId).classList.add('active');
+      document.getElementById(paneId).classList.add('active');
+    }
+
+    const xaiData = {
+      gradcam: {
+        title: "Grad-CAM: Coarse Semantic Localization",
+        formula: "L_GradCAM = ReLU( Σ α_k * A^k )",
+        desc: "Global average pooling collapses spatial gradients into per-channel weights. Highlights the primary anatomical regions driving the network's top predicted class.",
+        bg: "radial-gradient(circle, rgba(239,68,68,0.7) 15%, rgba(245,158,11,0.5) 45%, rgba(37,99,235,0.15) 80%)",
+        badge: "Grad-CAM Heatmap Overlay"
+      },
+      hirescam: {
+        title: "HiResCAM: Pixel-Precise Feature Localization",
+        formula: "L_HiResCAM = ReLU( Σ (∂Y / ∂A^k) ⊙ A^k )",
+        desc: "Eliminates global average pooling by taking the elementwise product of gradients and activations. Eliminates spatial wash-out and guarantees exact pixel boundaries.",
+        bg: "radial-gradient(circle, rgba(239,68,68,0.85) 5%, rgba(245,158,11,0.6) 20%, rgba(37,99,235,0.05) 50%)",
+        badge: "HiResCAM: Precision Borders"
+      },
+      contrastive: {
+        title: "Contrastive CAM: Class-Discriminative Attributions",
+        formula: "L_Contrast = Y_target - Y_competitor",
+        desc: "Answers: 'Why Coat instead of Pullover?' Backpropagates the difference between the target and runner-up logit, isolating only features that distinguish the two classes.",
+        bg: "linear-gradient(135deg, rgba(6,182,212,0.8) 0%, rgba(37,99,235,0.6) 50%, rgba(239,68,68,0.7) 100%)",
+        badge: "Contrastive: Target vs Runner-Up"
+      },
+      smoothgrad: {
+        title: "SmoothGrad: Noise-Reduced Saliency",
+        formula: "M_Smooth = (1/N) Σ ∂Y / ∂(x + N(0, σ²))",
+        desc: "Averages saliency maps over N samples perturbed by Gaussian noise. Filters out gradient noise artifacts, leaving clean object outlines.",
+        bg: "radial-gradient(ellipse at center, rgba(16,185,129,0.7) 10%, rgba(6,182,212,0.4) 40%, rgba(15,23,42,0.1) 70%)",
+        badge: "SmoothGrad: De-noised Saliency"
+      }
+    };
+
+    function showXAI(type) {
+      document.querySelectorAll('.xai-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const d = xaiData[type];
+      document.getElementById('canvas-bg').style.background = d.bg;
+      document.getElementById('canvas-badge').innerText = d.badge;
+      document.getElementById('xai-title').innerText = d.title;
+      document.getElementById('xai-formula').innerText = d.formula;
+      document.getElementById('xai-desc').innerText = d.desc;
     }
   </script>
 </body>
