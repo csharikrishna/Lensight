@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-45%20passed-success)](tests/)
 [![Zero Heavy Bloat](https://img.shields.io/badge/dependencies-pure%20torch%20%2B%20numpy-orange.svg)](pyproject.toml)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/csharikrishna/Lensight-)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/csharikrishna/Lensight)
 
 [Why Lensight?](#-why-lensight-vs-the-fragmented-stack) •
 [Installation](#-installation) •
@@ -71,8 +71,8 @@ graph LR
 
 Install from local checkout:
 ```bash
-git clone https://github.com/csharikrishna/Lensight-.git
-cd Lensight-
+git clone https://github.com/csharikrishna/Lensight.git
+cd Lensight
 pip install -e .
 ```
 
