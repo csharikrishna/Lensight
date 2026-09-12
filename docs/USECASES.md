@@ -132,6 +132,8 @@ In commercial computer vision, up to 10% of validation errors are not model flaw
 ### Toolkit Solution
 `lensight` identifies **high-confidence misclassifications**: examples where the model is $\ge 80\%$ confident in class $A$, but the dataset label states class $B$. In real datasets, these are primary candidates for label errors.
 
+> **Methodology Note**: Unlike dedicated frameworks such as `cleanlab` (which estimate joint distributions via out-of-fold cross-validated confident learning), Lensight's `find_label_errors` is designed as a **fast, zero-overhead complementary triage heuristic**. It runs instantly during standard validation passes to surface high-priority suspected mislabels for manual inspection without requiring multi-fold retraining.
+
 ### Code Example
 ```python
 # Extract suspected label noise

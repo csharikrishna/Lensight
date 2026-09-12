@@ -4,12 +4,12 @@
 
 # 🔍 lensight
 
-**The unified, production-grade PyTorch computer-vision diagnostic, interpretability, and dataset health toolkit.**
+**A unified, lightweight PyTorch computer-vision diagnostic, interpretability, and dataset health toolkit.**
 
-[![PyPI Version](https://img.shields.io/badge/pypi-v0.2.0-blue.svg)](https://pypi.org/project/lensight/)
+[![PyPI: Pending Release](https://img.shields.io/badge/pypi-v0.2.0%20(pending%20release)-orange.svg)](https://github.com/csharikrishna/Lensight/releases)
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-45%20passed-success)](tests/)
+[![CI](https://github.com/csharikrishna/Lensight/actions/workflows/ci.yml/badge.svg)](https://github.com/csharikrishna/Lensight/actions/workflows/ci.yml)
 [![Zero Heavy Bloat](https://img.shields.io/badge/dependencies-pure%20torch%20%2B%20numpy-orange.svg)](pyproject.toml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/csharikrishna/Lensight)
 
@@ -25,6 +25,8 @@
 [Launch Kit](docs/GITHUB_LAUNCH_KIT.md)
 
 </div>
+
+> **🌱 Project Status: v0.2.0 (Beta)** — Lensight is an open-source CV toolkit in active early release. It is fully tested with clean-room installs and zero-bloat dependencies. We are actively collecting real-world feedback from computer-vision researchers and practitioners. Issue reports and PRs are warmly welcomed!
 
 ---
 
@@ -44,10 +46,14 @@ Previously, teams had to stitch together **5 to 6 separate, conflicting librarie
 | **Visual Attribution & CAM** | `pytorch-grad-cam` + `captum` | `GradCAM`, `HiResCAM`, `ContrastiveCAM`, `IntegratedGradients` (CNN & ViT native, vectorized GPU batching) |
 | **Dataset Health & Vision EDA** | Ad-hoc scripts / `pandas-profiling` | `DatasetExplorer` (Laplacian sharpness, exposure clipping, class balance) |
 | **Duplicates & Leakage Auditing** | `imgcheck` / `imgdedup` (disk-only, slow loops) | `DatasetAuditor` ($50\times$ faster vectorized NumPy bitwise hashing, transitive Union-Find) |
-| **Label Noise & Quality Audit** | `cleanlab` | Built directly into `ModelDoctor.diagnose()` via high-confidence contradiction discovery |
+| **Label Noise & Quality Audit** | `cleanlab` (Confident Learning) | Fast complementary triage (`find_label_errors`) via high-confidence prediction discrepancy without out-of-fold retraining overhead |
 | **Confidence Calibration** | `netcal` | `TemperatureScaler` (1-line post-hoc optimization, zero top-1 accuracy change) |
 | **Dataset Sanitization** | Destructive deletion scripts | `DatasetSanitizer` (in-memory `torch.utils.data.Subset` with zero disk mutation) |
 | **Interactive Dashboards** | Custom notebook plotting code | Self-contained, zero-dependency dark-mode HTML dashboards & notebook-native `_repr_html_()` |
+
+<div align="center">
+  <img src="docs/assets/launch_leakage_duplicate_demo.png" alt="Lensight Deduplication and Smart Survivor Selection" style="max-width: 100%; border-radius: 8px; margin-top: 16px; border: 1px solid #334155;" />
+</div>
 
 ---
 
@@ -69,17 +75,19 @@ graph LR
 
 ## ⚡ Installation
 
-Install from local checkout:
+Install directly from GitHub (v0.2.0):
+```bash
+pip install git+https://github.com/csharikrishna/Lensight.git
+```
+
+Or clone for local development and testing:
 ```bash
 git clone https://github.com/csharikrishna/Lensight.git
 cd Lensight
 pip install -e .
 ```
 
-Or install dependencies directly:
-```bash
-pip install torch numpy pillow scikit-learn
-```
+*(PyPI index registration `pip install lensight` is currently queued. In the meantime, install directly via GitHub above.)*
 
 > **Zero Heavy Bloat**: `lensight` does **not** force installations of OpenCV, Pandas, or heavy PDF generators. All perceptual hashing, blur variance, and interactive dashboards use pure NumPy, PyTorch, and Pillow.
 
