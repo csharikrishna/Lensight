@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lensight — Unified PyTorch Computer Vision Diagnostics & Data Quality</title>
   <meta name="description" content="The unified, lightweight diagnostic toolkit for PyTorch Computer Vision: pre-training dataset auditing, train/test leakage detection, confidence calibration (ECE), and Grad-CAM explainability in a single import." />
+  <link rel="icon" type="image/png" href="assets/logo.png?v=2" />
 
   <!-- Google Fonts: Outfit, Inter, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,7 +45,7 @@
       --font-mono: 'JetBrains Mono', monospace;
     }
 
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -52,6 +53,8 @@
 
     html {
       scroll-behavior: smooth;
+      overflow-x: hidden;
+      width: 100%;
     }
 
     body {
@@ -60,6 +63,15 @@
       color: var(--text);
       line-height: 1.65;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      width: 100%;
+      position: relative;
+    }
+
+    img, svg, canvas {
+      max-width: 100%;
+      height: auto;
+      display: block;
     }
 
     /* Navigation */
@@ -177,6 +189,7 @@
       max-width: 1200px;
       margin: 0 auto;
       text-align: center;
+      width: 100%;
     }
 
     .hero-badge {
@@ -191,6 +204,10 @@
       font-weight: 600;
       color: var(--primary);
       margin-bottom: 24px;
+      max-width: 100%;
+      line-height: 1.4;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .hero-badge span.pill {
@@ -200,16 +217,19 @@
       border-radius: var(--radius-full);
       font-size: 0.72rem;
       font-weight: 700;
+      white-space: nowrap;
     }
 
     .hero h1 {
       font-family: var(--font-heading);
-      font-size: 3.4rem;
+      font-size: clamp(2rem, 5.5vw, 3.4rem);
       font-weight: 800;
-      line-height: 1.15;
+      line-height: 1.18;
       letter-spacing: -0.03em;
       margin-bottom: 20px;
       color: var(--text);
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .hero h1 .gradient-text {
@@ -219,12 +239,15 @@
     }
 
     .hero-subtitle {
-      font-size: 1.22rem;
+      font-size: clamp(1rem, 2.5vw, 1.22rem);
       color: var(--text-muted);
       max-width: 780px;
       margin: 0 auto 34px;
       font-weight: 400;
       line-height: 1.6;
+      padding: 0 8px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .hero-cta {
@@ -755,13 +778,279 @@
       font-size: 0.85rem;
     }
 
+    .scroll-hint {
+      display: none;
+      font-size: 0.78rem;
+      color: var(--primary);
+      background: var(--primary-subtle);
+      border: 1px solid rgba(37, 99, 235, 0.15);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    /* Tablet & Medium Screens */
     @media (max-width: 960px) {
-      .hero h1 { font-size: 2.5rem; }
-      .stat-banner { grid-template-columns: repeat(2, 1fr); }
-      .xai-display { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .hero h1 { font-size: clamp(2rem, 5vw, 2.8rem); }
+      .stat-banner { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .xai-display { grid-template-columns: 1fr; gap: 24px; }
       .case-grid { grid-template-columns: 1fr; }
       .faq-grid { grid-template-columns: 1fr; }
-      .nav-links { display: none; }
+    }
+
+    /* Mobile Phones (Portrait & Landscape <= 768px) */
+    @media (max-width: 768px) {
+      .nav-container {
+        padding: 10px 16px;
+      }
+      .brand {
+        gap: 8px;
+      }
+      .brand img {
+        width: 32px;
+        height: 32px;
+      }
+      .brand-text {
+        font-size: 1.2rem;
+      }
+      .nav-actions {
+        gap: 8px;
+      }
+      .btn {
+        padding: 8px 12px;
+        font-size: 0.84rem;
+      }
+      .hero {
+        padding: 42px 16px 28px;
+      }
+      .hero-badge {
+        font-size: 0.76rem;
+        padding: 5px 12px;
+        margin-bottom: 16px;
+        line-height: 1.4;
+      }
+      .hero-badge span.pill {
+        padding: 2px 6px;
+        font-size: 0.68rem;
+      }
+      .hero h1 {
+        font-size: clamp(1.8rem, 6.5vw, 2.4rem);
+        margin-bottom: 14px;
+        line-height: 1.22;
+      }
+      .hero-subtitle {
+        font-size: 0.98rem;
+        line-height: 1.55;
+        margin-bottom: 24px;
+        padding: 0 4px;
+      }
+      .hero-cta {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        margin-bottom: 28px;
+      }
+      .hero-cta .btn {
+        width: 100%;
+        max-width: 320px;
+      }
+      .install-box {
+        width: 100%;
+        max-width: 320px;
+        justify-content: space-between;
+        font-size: 0.84rem;
+        padding: 9px 14px;
+      }
+      .stat-banner {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 14px 10px;
+        margin-bottom: 36px;
+      }
+      .stat-item .val {
+        font-size: 1.45rem;
+      }
+      .stat-item .lbl {
+        font-size: 0.74rem;
+      }
+      .section {
+        padding: 44px 16px;
+      }
+      .section-tag {
+        font-size: 0.75rem;
+      }
+      .section-title {
+        font-size: 1.7rem;
+        line-height: 1.25;
+        margin-bottom: 10px;
+      }
+      .section-desc {
+        font-size: 0.94rem;
+        margin-bottom: 28px;
+        line-height: 1.55;
+      }
+      .xai-explorer {
+        padding: 18px 14px;
+        margin-bottom: 36px;
+      }
+      .xai-controls {
+        gap: 6px;
+        margin-bottom: 18px;
+      }
+      .xai-btn {
+        padding: 7px 10px;
+        font-size: 0.78rem;
+        flex: 1 1 calc(50% - 6px);
+        text-align: center;
+      }
+      .xai-visual-card {
+        padding: 14px 10px;
+      }
+      .xai-simulated-canvas {
+        height: 190px;
+      }
+      .xai-info h4 {
+        font-size: 1.15rem;
+      }
+      .xai-info p {
+        font-size: 0.86rem;
+        margin-bottom: 14px;
+      }
+      .xai-formula {
+        font-size: 0.74rem;
+        padding: 8px 10px;
+        max-width: 100%;
+        overflow-x: auto;
+        word-break: break-all;
+      }
+      .scroll-hint {
+        display: block;
+      }
+      .table-card {
+        margin-bottom: 36px;
+        border-radius: var(--radius-sm);
+        -webkit-overflow-scrolling: touch;
+      }
+      table {
+        min-width: 520px;
+        font-size: 0.82rem;
+      }
+      th, td {
+        padding: 10px 12px;
+      }
+      .grid-3 {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-bottom: 36px;
+      }
+      .card {
+        padding: 18px 14px;
+      }
+      .card h3 {
+        font-size: 1.15rem;
+      }
+      .card p {
+        font-size: 0.88rem;
+      }
+      .code-tour {
+        margin-bottom: 36px;
+        border-radius: var(--radius-sm);
+      }
+      .tour-nav {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding: 4px;
+        gap: 4px;
+      }
+      .tour-nav-btn {
+        padding: 8px 12px;
+        font-size: 0.78rem;
+        flex-shrink: 0;
+        border-radius: 4px;
+      }
+      .tour-pane {
+        padding: 14px 10px;
+      }
+      pre {
+        font-size: 0.76rem;
+        line-height: 1.5;
+        -webkit-overflow-scrolling: touch;
+      }
+      .case-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-bottom: 36px;
+      }
+      .case-card {
+        padding: 18px 14px;
+      }
+      .faq-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-bottom: 36px;
+      }
+      .faq-item {
+        padding: 18px 14px;
+      }
+      footer {
+        padding: 32px 16px 20px;
+      }
+      .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+        padding-bottom: 20px;
+      }
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+      }
+      .footer-note {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 8px;
+        margin-top: 14px;
+      }
+    }
+
+    /* Small Mobile Phones (iPhone SE, Galaxy <= 480px) */
+    @media (max-width: 480px) {
+      .btn-text {
+        display: none;
+      }
+      #gh-nav-btn {
+        padding: 8px;
+        min-width: 36px;
+      }
+      .hero h1 {
+        font-size: 1.7rem;
+      }
+      .stat-banner {
+        gap: 8px;
+        padding: 12px 8px;
+      }
+      .stat-item .val {
+        font-size: 1.3rem;
+      }
+      .stat-item .lbl {
+        font-size: 0.72rem;
+      }
+      .section-title {
+        font-size: 1.45rem;
+      }
+      .xai-controls {
+        flex-direction: column;
+      }
+      .xai-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -771,7 +1060,7 @@
   <header>
     <div class="nav-container">
       <a href="#" class="brand">
-        <img src="assets/logo.png" alt="Lensight Logo" onerror="this.src='docs/assets/logo.png'" />
+        <img src="assets/logo.png?v=2" alt="Lensight Logo" onerror="this.src='docs/assets/logo.png?v=2'" />
         <span class="brand-text">Lensight</span>
       </a>
       <ul class="nav-links">
@@ -783,9 +1072,9 @@
         <li><a href="#faq">FAQ</a></li>
       </ul>
       <div class="nav-actions">
-        <a href="https://github.com/csharikrishna/Lensight" target="_blank" class="btn btn-outline">
+        <a href="https://github.com/csharikrishna/Lensight" target="_blank" class="btn btn-outline" id="gh-nav-btn">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          GitHub
+          <span class="btn-text">GitHub</span>
         </a>
         <a href="#tour" class="btn btn-primary">Quick Tour</a>
       </div>
@@ -887,6 +1176,7 @@
       Why install 5 different unmaintained packages with 28 heavy dependencies when you can use one unified, cohesive tool?
     </p>
 
+    <div class="scroll-hint">👉 Swipe table to view full comparison →</div>
     <div class="table-card">
       <table>
         <thead>
@@ -1196,7 +1486,7 @@ $ python -c "import lensight; lensight.help()"</code></pre>
   <footer>
     <div class="footer-content">
       <div class="footer-brand">
-        <img src="assets/logo.png" alt="Lensight Logo" onerror="this.src='docs/assets/logo.png'" />
+        <img src="assets/logo.png?v=2" alt="Lensight Logo" onerror="this.src='docs/assets/logo.png?v=2'" />
         <span>Lensight</span>
       </div>
       <ul class="footer-links">
