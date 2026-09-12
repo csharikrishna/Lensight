@@ -7,7 +7,7 @@
 **A unified, lightweight PyTorch computer-vision diagnostic, interpretability, and dataset health toolkit.**
 
 [![PyPI: Pending Release](https://img.shields.io/badge/pypi-v0.2.0%20(pending%20release)-orange.svg)](https://github.com/csharikrishna/Lensight/releases)
-[![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![CI](https://github.com/csharikrishna/Lensight/actions/workflows/ci.yml/badge.svg)](https://github.com/csharikrishna/Lensight/actions/workflows/ci.yml)
 [![Zero Heavy Bloat](https://img.shields.io/badge/dependencies-pure%20torch%20%2B%20numpy-orange.svg)](pyproject.toml)
